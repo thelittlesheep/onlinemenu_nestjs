@@ -5,9 +5,9 @@ import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { Apiv1Module } from './apiv1/apiv1.module';
 import { Apiv2Module } from './apiv2/apiv2.module';
-import { RouterModule } from 'nest-router';
+import { RouterModule, Routes } from 'nest-router';
 
-const routes = [
+const routes: Routes = [
   {
     path: 'v1',
     module: Apiv1Module,
