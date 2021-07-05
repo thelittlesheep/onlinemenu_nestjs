@@ -18,13 +18,16 @@ export class UsersController {
 
   @Get()
   getAllUsers(@Request() req, @Response() res, @Next() next) {
-    const users = [{ Name: 'Michael', Age: 25 }];
+    const users = [
+      { id: 1, Name: 'Michael', Age: 25 },
+      { id: 2, Name: 'Mei', Age: 24 },
+    ];
     // return users;
     res.status(HttpStatus.OK).json(users);
   }
   @Get('/:id')
   getUser(@Param() params) {
-    return { getUser: params.id };
+    return { id: params.id };
   }
   @Post()
   addUser(@Body() createUserDTO: CreateUserDTO) {
