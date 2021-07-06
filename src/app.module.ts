@@ -2,6 +2,9 @@ import { Module } from '@nestjs/common';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { RouterModule, Routes } from 'nest-router';
+import { TypeOrmModule } from '@nestjs/typeorm';
+
+import { typeOrmConfig } from './typeorm.config';
 
 import { UsersModulev1 } from './apiv1/Usersv1/users.module';
 import { UsersModulev2 } from './apiv2/Usersv2/users.module';
@@ -31,6 +34,17 @@ const routes: Routes = [
 @Module({
   imports: [
     RouterModule.forRoutes(routes),
+    TypeOrmModule.forRoot({
+      type: 'mariadb',
+      host: '172.18.0.2',
+      port: 3306,
+      username: 'root',
+      password: 'Hm3416077',
+      database: 'RPI_LOG',
+      entities: ['dist/**/*.entity{.ts,.js}'],
+      synchronize: true,
+      retryAttempts: 3,
+    }),
     // Apiv1Module,
     // Apiv2Module,
     RpiTempModule,
