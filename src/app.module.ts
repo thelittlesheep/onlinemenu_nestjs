@@ -34,17 +34,7 @@ const routes: Routes = [
 @Module({
   imports: [
     RouterModule.forRoutes(routes),
-    TypeOrmModule.forRoot({
-      type: 'mariadb',
-      host: '172.18.0.2',
-      port: 3306,
-      username: 'root',
-      password: 'Hm3416077',
-      database: 'RPI_LOG',
-      entities: ['dist/**/*.entity{.ts,.js}'],
-      synchronize: true,
-      retryAttempts: 3,
-    }),
+    TypeOrmModule.forRoot(typeOrmConfig),
     // Apiv1Module,
     // Apiv2Module,
     RpiTempModule,
