@@ -6,13 +6,12 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 
 import { typeOrmConfig } from './typeorm.config';
 
-import { UsersModulev1 } from './apiv1/Usersv1/users.module';
-import { UsersModulev2 } from './apiv2/Usersv2/users.module';
-import { Apiv1Module } from './apiv1/apiv1.module';
-import { Apiv2Module } from './apiv2/apiv2.module';
+// import { UsersModulev1 } from './apiv1/Usersv1/users.module';
+// import { UsersModulev2 } from './apiv2/Usersv2/users.module';
+// import { Apiv1Module } from './apiv1/apiv1.module';
+// import { Apiv2Module } from './apiv2/apiv2.module';
 
 import { RpiTempModule } from './rpi-temp/rpi-temp.module';
-import { UpdatetempModule } from './rpi-temp/updatetemp/updatetemp.module';
 
 const routes: Routes = [
   // {
@@ -28,16 +27,15 @@ const routes: Routes = [
   {
     path: 'rpi_temp',
     module: RpiTempModule,
-    children: [{ path: 'updatetemp', module: UpdatetempModule }],
   },
 ];
 @Module({
   imports: [
     RouterModule.forRoutes(routes),
     TypeOrmModule.forRoot(typeOrmConfig),
+    RpiTempModule,
     // Apiv1Module,
     // Apiv2Module,
-    RpiTempModule,
   ],
   controllers: [AppController],
   providers: [AppService],

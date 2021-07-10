@@ -5,12 +5,9 @@ export class Temp_data {
   @PrimaryGeneratedColumn()
   id: number;
 
-  @Column({ type: 'timestamptz' })
+  @Column({ type: 'datetime' })
   logtime: Date;
 
-  @Column()
+  @Column({ type: 'float' })
   temp: number;
-
-  @Column()
-  test: number;
 }
