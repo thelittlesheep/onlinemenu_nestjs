@@ -1,27 +1,54 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { RpiTempDto } from './rpi-temp.dto';
-import { Temp_data } from './Temp_data.entity';
+import { RpiTempDto } from './dto/rpi-temp.dto';
+import { TempData } from './entity/Temp_data.entity';
+import { spacecalspd } from './dto/spacecalspd';
+import { resolve } from 'path';
+import { rejects } from 'assert';
 
 @Injectable()
 export class RpiTempService {
   constructor(
-    @InjectRepository(Temp_data)
-    private Temp_dataRespository: Repository<Temp_data>,
+    @InjectRepository(TempData)
+    private TempData_Respository: Repository<TempData>, // @InjectRepository(spacecalspd) // private spacecalspd_Respository: Repository<spacecalspd>,
   ) {}
 
-  getAll(): Promise<Temp_data[]> {
-    return this.Temp_dataRespository.find({
+  getAll(): Promise<TempData[]> {
+    return this.TempData_Respository.find({
       order: { id: 'DESC' },
       take: 10,
     });
   }
 
-  createTempdata(tempdata: RpiTempDto): Promise<Temp_data> {
+  async execStorageProcedure(param?: string) {
+    // const querystr = `CALL TESTPD`;
+    const dbres: Promise<any> = this.TempData_Respository.query(
+      'CALL db_spd()',
+      // [param],
+    );
+    const newdata: spacecalspd[] = [];
+
+    await dbres.then((rawdata) => {
+      if (rawdata) {
+        for (const singleTempData of rawdata[0]) {
+          const name: string = singleTempData.name;
+          const sizeInMB = Number(singleTempData.sizeInMB);
+          newdata.push({
+            name: name,
+            sizeInMB: sizeInMB,
+          });
+        }
+        // console.log(newdata);
+      }
+    });
+    return newdata;
+  }
+
+  createTempdata(tempdata: RpiTempDto): Promise<TempData> {
     const logtime = tempdata._logtime;
     const temp = tempdata._temp;
-    const newTemp_data = this.Temp_dataRespository.create({ logtime, temp });
-    return this.Temp_dataRespository.save(newTemp_data);
+    const newTemp_data = this.TempData_Respository.create({ logtime, temp });
+    return this.TempData_Respository.save(newTemp_data);
   }
 }

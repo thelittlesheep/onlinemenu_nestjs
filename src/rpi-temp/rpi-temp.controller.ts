@@ -4,15 +4,17 @@ import {
   Get,
   HttpCode,
   HttpStatus,
+  Param,
   Post,
+  Query,
   Redirect,
   Res,
 } from '@nestjs/common';
-import { Response } from 'express';
-import { RpiTempDto } from './rpi-temp.dto';
+import { json, Response } from 'express';
+import { RpiTempDto } from './dto/rpi-temp.dto';
 import { RpiTempService } from './rpi-temp.service';
-import { Temp_data } from './Temp_data.entity';
-import { UpdateBodyDTO } from './updatebody.dto';
+import { UpdateBodyDTO } from './dto/updatebody.dto';
+import { spacecalspd } from './dto/spacecalspd';
 
 @Controller()
 export class RpiTempController {
@@ -23,24 +25,45 @@ export class RpiTempController {
     return this.Rpi_TempService.getAll();
   }
 
+  // @Get('/callspd/:dbname')
+  @Get('/callspd')
+  async callspd(@Param() param): Promise<any[]> {
+    const res = this.Rpi_TempService.execStorageProcedure(param.name);
+    return res;
+    // return param.dbname;
+  }
+
   @Post()
   updatetempbybody(
     // @Res({ passthrough: true }) res: Response,
     @Res() res: Response,
     @Body() updatebody: UpdateBodyDTO,
   ) {
-    const rawdate = updatebody._rawdatetime;
+    const rawdatetime = updatebody._rawdatetime;
     const rawtemp = updatebody._rawtemp;
-    const logtime: Date = new Date(Date.parse(rawdate));
+    // const datetimeInms: number | typeof NaN = Date.parse(rawdatetime);
+    let logtime: Date;
 
-    if (rawdate === undefined || rawtemp === undefined) {
+    function isValidDate(d: number): boolean {
+      const result: boolean = isNaN(d);
+      return !result;
+    }
+
+    if (
+      // !isValidDate(datetimeInms) ||
+      rawdatetime === undefined ||
+      rawtemp === undefined
+    ) {
       res.status(417).sendStatus(417);
     } else {
+      // logtime = new Date(datetimeInms);
+      logtime = new Date(Date.parse(rawdatetime));
+      console.log(rawdatetime);
+      console.log(logtime);
       const tempdata: RpiTempDto = {
         _logtime: logtime,
         _temp: rawtemp,
       };
-      console.log(rawtemp);
       this.Rpi_TempService.createTempdata(tempdata);
       res.status(201).sendStatus(201);
     }
