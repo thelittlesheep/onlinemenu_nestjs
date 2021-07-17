@@ -58,8 +58,8 @@ export class RpiTempController {
     } else {
       // logtime = new Date(datetimeInms);
       logtime = new Date(Date.parse(rawdatetime));
-      console.log(rawdatetime);
-      console.log(logtime);
+      // console.log(rawdatetime);
+      // console.log(logtime);
       const tempdata: RpiTempDto = {
         _logtime: logtime,
         _temp: rawtemp,
