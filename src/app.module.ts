@@ -28,6 +28,10 @@ const routes: Routes = [
     path: 'rpi_temp',
     module: RpiTempModule,
   },
+  {
+    path: 'api',
+    // module: AppService,
+  },
 ];
 @Module({
   imports: [

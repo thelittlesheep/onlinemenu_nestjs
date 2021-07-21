@@ -22,13 +22,13 @@ export class RpiTempController {
 
   @Get()
   gettemp() {
-    const data = this.Rpi_TempService.getAll();
-    data.then((d) =>
-      d.forEach((el) => {
-        console.log(el.logtime);
-      }),
-    );
-    return data;
+    // const data = this.Rpi_TempService.getAll();
+    // data.then((d) =>
+    //   d.forEach((el) => {
+    //     console.log(el.logtime);
+    //   }),
+    // );
+    return this.Rpi_TempService.getAll();
   }
 
   // @Get('/callspd/:dbname')
