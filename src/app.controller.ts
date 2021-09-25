@@ -5,8 +5,8 @@ import { AppService } from './app.service';
 export class AppController {
   constructor(private readonly appService: AppService) {}
 
-  @Get()
-  async findAll() {
-    throw new HttpException('NotFound', HttpStatus.NOT_FOUND);
-  }
+  // @Get()
+  // async findAll() {
+  //   throw new HttpException('NotFound', HttpStatus.NOT_FOUND);
+  // }
 }

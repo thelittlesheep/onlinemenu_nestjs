@@ -12,6 +12,7 @@ import { typeOrmConfig } from './typeorm.config';
 // import { Apiv2Module } from './apiv2/apiv2.module';
 
 import { RpiTempModule } from './rpi-temp/rpi-temp.module';
+import { AppGateway } from './app.gateway';
 
 const routes: Routes = [
   // {
@@ -28,6 +29,10 @@ const routes: Routes = [
     path: 'rpi_temp',
     module: RpiTempModule,
   },
+  {
+    path: 'api',
+    // module: AppService,
+  },
 ];
 @Module({
   imports: [
@@ -38,6 +43,6 @@ const routes: Routes = [
     // Apiv2Module,
   ],
   controllers: [AppController],
-  providers: [AppService],
+  providers: [AppService, AppGateway],
 })
 export class AppModule {}
