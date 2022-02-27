@@ -31,10 +31,15 @@ export class RpiTempController {
     return this.Rpi_TempService.getAll();
   }
 
-  // @Get('/callspd/:dbname')
+  @Get('/callspd/:dbname')
+  async callspdWithParam(@Param() param: { dbname: string }): Promise<any[]> {
+    const res = this.Rpi_TempService.execStorageProcedure(param.dbname);
+    console.log(param.dbname);
+    return res;
+  }
   @Get('/callspd')
-  async callspd(@Param() param): Promise<any[]> {
-    const res = this.Rpi_TempService.execStorageProcedure(param.name);
+  async callspd2(): Promise<any[]> {
+    const res = this.Rpi_TempService.execStorageProcedure(null);
     return res;
     // return param.dbname;
   }

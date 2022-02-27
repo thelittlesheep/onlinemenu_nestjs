@@ -4,8 +4,6 @@ import { Repository } from 'typeorm';
 import { RpiTempDto } from './dto/rpi-temp.dto';
 import { TempData } from './entity/Temp_data.entity';
 import { spacecalspd } from './dto/spacecalspd';
-import { resolve } from 'path';
-import { rejects } from 'assert';
 
 @Injectable()
 export class RpiTempService {
@@ -21,10 +19,16 @@ export class RpiTempService {
     });
   }
 
-  async execStorageProcedure(param?: string) {
-    // const querystr = `CALL TESTPD`;
+  async execStorageProcedure(param?: string | null) {
+    let querystr: string;
+    if (param) {
+      querystr = `CALL rpilog_spd('${param}')`;
+    } else {
+      querystr = `CALL rpilog_spd(${param})`;
+    }
+
     const dbres: Promise<any> = this.TempData_Respository.query(
-      'CALL db_spd()',
+      querystr,
       // [param],
     );
     const newdata: spacecalspd[] = [];

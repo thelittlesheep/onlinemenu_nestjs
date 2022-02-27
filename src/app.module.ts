@@ -4,7 +4,7 @@ import { AppService } from './app.service';
 import { RouterModule, Routes } from 'nest-router';
 import { TypeOrmModule } from '@nestjs/typeorm';
 
-import { typeOrmConfig } from './typeorm.config';
+import { RPI_LOGConfig, onlinemenuConfig } from './typeorm.config';
 
 // import { UsersModulev1 } from './apiv1/Usersv1/users.module';
 // import { UsersModulev2 } from './apiv2/Usersv2/users.module';
@@ -13,6 +13,7 @@ import { typeOrmConfig } from './typeorm.config';
 
 import { RpiTempModule } from './rpi-temp/rpi-temp.module';
 import { AppGateway } from './app.gateway';
+import { MenuModule } from './menu/menu.module';
 
 const routes: Routes = [
   // {
@@ -30,15 +31,17 @@ const routes: Routes = [
     module: RpiTempModule,
   },
   {
-    path: 'api',
-    // module: AppService,
+    path: 'menu',
+    module: MenuModule,
   },
 ];
 @Module({
   imports: [
     RouterModule.forRoutes(routes),
-    TypeOrmModule.forRoot(typeOrmConfig),
+    TypeOrmModule.forRoot(RPI_LOGConfig),
+    TypeOrmModule.forRoot(onlinemenuConfig),
     RpiTempModule,
+    MenuModule,
     // Apiv1Module,
     // Apiv2Module,
   ],
