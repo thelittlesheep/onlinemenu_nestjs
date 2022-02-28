@@ -4,22 +4,22 @@ import { prodtype_adjustitem } from './prodtype_adjustitem.entity';
 @Entity()
 export class adjustitem {
   @PrimaryGeneratedColumn()
-  id: number;
+  id?: number;
 
-  @Column({ type: 'varchar' })
-  name: string;
-
-  @Column({ type: 'tinyint' })
-  add: number;
+  @Column({ type: 'varchar', length: 10 })
+  name?: string;
 
   @Column({ type: 'tinyint' })
-  remove: number;
+  add?: number;
 
   @Column({ type: 'tinyint' })
-  adjust: number;
+  remove?: number;
+
+  @Column({ type: 'tinyint' })
+  adjust?: number;
 
   @Column({ type: 'smallint' })
-  priceadjustment: number;
+  priceadjustment?: number;
 
   @OneToMany(
     () => prodtype_adjustitem,
@@ -28,5 +28,5 @@ export class adjustitem {
       nullable: false,
     },
   )
-  adjitems: prodtype_adjustitem[];
+  adjitems?: prodtype_adjustitem[];
 }

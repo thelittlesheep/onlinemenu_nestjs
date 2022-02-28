@@ -1,25 +1,17 @@
-import {
-  Column,
-  Entity,
-  JoinColumn,
-  JoinTable,
-  ManyToMany,
-  OneToMany,
-  PrimaryGeneratedColumn,
-} from 'typeorm';
+import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
 import { product } from './product.entity';
 import { prodtype_adjustitem } from './prodtype_adjustitem.entity';
 
 @Entity()
 export class prodtype {
   @PrimaryGeneratedColumn()
-  id: number;
+  id?: number;
 
-  @Column({ type: 'varchar' })
-  name: string;
+  @Column({ type: 'varchar', length: 20 })
+  name?: string;
 
   @OneToMany(() => product, (products) => products.prodtypes)
-  prods: product[];
+  prods?: product[];
 
   @OneToMany(
     () => prodtype_adjustitem,
@@ -28,5 +20,5 @@ export class prodtype {
       nullable: false,
     },
   )
-  adjitems: prodtype_adjustitem[];
+  adjitems?: prodtype_adjustitem[];
 }
