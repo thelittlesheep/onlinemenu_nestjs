@@ -6,6 +6,7 @@ import {
   PrimaryGeneratedColumn,
 } from 'typeorm';
 import { order } from './order.entity';
+import { OneToMany } from 'typeorm';
 
 @Entity()
 export class user {
@@ -33,7 +34,6 @@ export class user {
   @Column({ name: 'order_id', type: 'int', select: false, nullable: true })
   order_id?: number;
 
-  @ManyToOne(() => order, (order) => order.users, { nullable: false })
-  @JoinColumn({ name: 'order_id' })
-  orders?: order;
+  @OneToMany(() => order, (order) => order.userid, { nullable: false })
+  orders?: order[];
 }

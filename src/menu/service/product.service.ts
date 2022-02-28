@@ -31,8 +31,6 @@ export class ProductService {
   }
 
   async getproductDetail(productid) {
-    console.log(productid);
-
     const tempquery = await this.product_Respository
       .createQueryBuilder('product')
       .leftJoinAndSelect('product.prodtypes', 'prodtypes')

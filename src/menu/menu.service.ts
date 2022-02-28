@@ -1,7 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { FindConditions, Repository } from 'typeorm';
-import { product } from './entity/product.entity';
 import { prodtype } from './entity/prodtype.entity';
 import { prodtype_adjustitem } from './entity/prodtype_adjustitem.entity';
 
