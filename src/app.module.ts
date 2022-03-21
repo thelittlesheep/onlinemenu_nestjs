@@ -26,10 +26,10 @@ const routes: Routes = [
   //   module: Apiv2Module,
   //   children: [{ path: 'users', module: UsersModulev2 }],
   // },
-  {
-    path: 'rpi_temp',
-    module: RpiTempModule,
-  },
+  // {
+  //   path: 'rpi_temp',
+  //   module: RpiTempModule,
+  // },
   {
     path: 'menu',
     module: MenuModule,
@@ -38,9 +38,9 @@ const routes: Routes = [
 @Module({
   imports: [
     RouterModule.forRoutes(routes),
-    TypeOrmModule.forRoot(RPI_LOGConfig),
+    // TypeOrmModule.forRoot(RPI_LOGConfig),
     TypeOrmModule.forRoot(onlinemenuConfig),
-    RpiTempModule,
+    // RpiTempModule,
     MenuModule,
     // Apiv1Module,
     // Apiv2Module,

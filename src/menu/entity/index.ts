@@ -1,23 +1,23 @@
 import { product } from './product.entity';
-import { prodtype } from './prodtype.entity';
-import { prodtype_adjustitem } from './prodtype_adjustitem.entity';
+import { category } from './category.entity';
 import { adjustitem } from './adjustitem.entity';
 import { user } from './user.entity';
 import { order } from './order.entity';
+import { adjusttype } from './adjusttype.entity';
 
 export const menuEntities = [
   product,
-  prodtype,
-  prodtype_adjustitem,
+  category,
   adjustitem,
+  adjusttype,
   user,
   order,
 ];
 
 export type allentitytype =
   | product
-  | prodtype
-  | prodtype_adjustitem
+  | category
   | adjustitem
+  | adjusttype
   | user
   | order;

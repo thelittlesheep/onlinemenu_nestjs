@@ -8,31 +8,32 @@ import {
 import { order } from './order.entity';
 import { OneToMany } from 'typeorm';
 
-@Entity()
+@Entity({name:'User'})
 export class user {
   @PrimaryGeneratedColumn()
-  id?: number;
+  user_id?: number;
 
   @Column({ type: 'varchar', length: 20 })
-  firstname?: string;
+  user_account?: string;
 
   @Column({ type: 'varchar', length: 20 })
-  lastname?: string;
+  user_password?: string;
 
-  @Column({ type: 'varchar', length: 20 })
-  phone?: string;
+  @Column({ type: 'varchar', length: 20, default: '' })
+  user_name?: string;
 
-  @Column()
-  age?: number;
+  @Column({ type: 'varchar', length: 30, default: '' })
+  user_email?: string;
 
-  @Column({ type: 'varchar', length: 10 })
-  gender?: string;
+  @Column({ type: 'varchar', length: 20, default: '' })
+  user_phone?: string;
 
-  @Column({ type: 'varchar', length: 30 })
-  mail?: string;
-
-  @Column({ name: 'order_id', type: 'int', select: false, nullable: true })
-  order_id?: number;
+  @Column({ default: 0 })
+  user_age?: number;
+  
+  // Foreign Key
+  // @Column({ name: 'order_id', type: 'int', select: false, nullable: true })
+  // order_id?: number;
 
   @OneToMany(() => order, (order) => order.userid, { nullable: false })
   orders?: order[];

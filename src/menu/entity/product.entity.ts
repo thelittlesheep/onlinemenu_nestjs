@@ -6,26 +6,32 @@ import {
   PrimaryGeneratedColumn,
   JoinColumn,
 } from 'typeorm';
-import { prodtype } from './prodtype.entity';
+import { category } from './category.entity';
 // import { Tproduct } from 'menu/interface/menu.interface';
+import { ApiProperty } from '@nestjs/swagger';
 
-@Entity()
+
+
+@Entity({name:'Product'})
 export class product {
   @PrimaryGeneratedColumn()
-  id?: number;
+  product_id?: number;
 
   @Column({ type: 'varchar', length: 20 })
-  name?: string;
-
-  @Column({ name: 'type_id', type: 'tinyint', select: false })
-  type_id?: number;
+  product_name?: string;
 
   @Column({ type: 'smallint' })
-  price?: number;
+  product_price?: number;
 
-  @ManyToOne(() => prodtype, (prodtype) => prodtype.prods, {
+  @Column({ name: 'category_id', type: 'tinyint', select: false })
+  category_id?: number;
+
+  @Column({ type: 'text'})
+  product_image?:string
+
+  @ManyToOne(() => category, (category) => category.products, {
     nullable: false,
   })
-  @JoinColumn({ name: 'type_id' })
-  prodtypes?: prodtype;
+  @JoinColumn({ name: 'category_id' })
+  categoryid?: category;
 }

@@ -11,16 +11,26 @@ import { product } from './product.entity';
 import { user } from './user.entity';
 import { ManyToOne } from 'typeorm';
 
-@Entity()
+@Entity({name:'Order'})
 export class order {
   @PrimaryGeneratedColumn()
-  id?: number;
+  order_id?: number;
 
   @Column({ name: 'user_id', type: 'int' })
   user_id?: number;
 
   @ManyToMany(() => product)
-  @JoinTable()
+  @JoinTable({
+    name:'Order_Product',
+    joinColumn:{
+      name:'order_id',
+      referencedColumnName:'order_id'
+    },
+    inverseJoinColumn:{
+      name:'product_id',
+      referencedColumnName:'product_id'
+    }
+  })
   products?: product[];
 
   @ManyToOne(() => user, (user) => user.orders, { nullable: false })

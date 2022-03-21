@@ -1,32 +1,35 @@
-import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
-import { prodtype_adjustitem } from './prodtype_adjustitem.entity';
+import { Column, Entity,  PrimaryGeneratedColumn, ManyToMany, ManyToOne, JoinColumn, JoinTable } from 'typeorm';
+import { adjusttype } from './adjusttype.entity';
+import { category } from './category.entity';
 
-@Entity()
+@Entity({name:'Adjustitem'})
 export class adjustitem {
   @PrimaryGeneratedColumn()
-  id?: number;
+  adjustitem_id?: number;
 
   @Column({ type: 'varchar', length: 10 })
-  name?: string;
-
-  @Column({ type: 'tinyint' })
-  add?: number;
-
-  @Column({ type: 'tinyint' })
-  remove?: number;
-
-  @Column({ type: 'tinyint' })
-  adjust?: number;
+  adjustitem_name?: string;
 
   @Column({ type: 'smallint' })
-  priceadjustment?: number;
+  adjustitem_priceadjust?: number;
 
-  @OneToMany(
-    () => prodtype_adjustitem,
-    (prodtype_adjustitem) => prodtype_adjustitem.adjustitem,
-    {
-      nullable: false,
-    },
-  )
-  adjitems?: prodtype_adjustitem[];
+  @Column({ name: 'adjusttype_id',type: 'tinyint' })
+  adjusttype_id?:number
+
+  // @ManyToOne(() => adjusttype, (adjusttype) => adjusttype.adjustitems, { nullable: false })
+  // @JoinColumn({ name: 'adjusttype_id' })
+  // adjusttype?: adjusttype;
+
+  // @ManyToMany(()=>adjusttype)
+  // @JoinTable({
+  //   name:'Adjusttype_Adjustitem',
+  //   joinColumn:{
+  //     name:'adjustitem_id',
+  //     referencedColumnName:'adjustitem_id'
+  //   },inverseJoinColumn:{
+  //     name:'adjusttype_id',
+  //     referencedColumnName:'adjusttype_id'
+  //   }
+  // })
+  // adjusttypes?:adjusttype[]
 }
