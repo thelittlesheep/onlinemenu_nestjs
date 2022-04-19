@@ -11,14 +11,18 @@ export class UserService {
     private user_Respository: Repository<user>,
   ) {}
 
-  async adduser(data: userDTO): Promise<user> {
+  async adduser(data: userDTO) {
     const varuser = new user();
     varuser.user_account = data.user_account;
-    varuser.user_password = data.user_account;
+    varuser.user_password = data.user_password;
     varuser.user_name = data.user_name;
     varuser.user_email = data.user_email;
     varuser.user_phone = data.user_phone;
     varuser.user_age = data.user_age;
+
+    // const id = await this.user_Respository.getId(varuser);
+    // console.log(id);
+
     return await this.user_Respository.save(varuser);
   }
 

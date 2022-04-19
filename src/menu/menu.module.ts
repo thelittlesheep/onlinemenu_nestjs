@@ -6,6 +6,8 @@ import { MenuService } from './menu.service';
 import { menuEntities } from './entity';
 import { menuSerivces } from './service';
 import { menuController } from './controler';
+import { Connection } from 'typeorm';
+import { Type } from 'class-transformer';
 
 @Module({
   controllers: [MenuController, ...menuController],

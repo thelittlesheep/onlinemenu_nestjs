@@ -22,7 +22,7 @@ export class userDTO {
   @IsString()
   @ApiProperty({ example: 'Huang' })
   user_name: string;
-  
+
   @IsOptional()
   @IsEmail()
   @ApiProperty({ description: '輸入欲註冊之信箱' })

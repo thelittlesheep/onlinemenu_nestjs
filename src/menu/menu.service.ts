@@ -4,8 +4,7 @@ import { FindConditions, Repository } from 'typeorm';
 
 @Injectable()
 export class MenuService {
-  constructor() // private type_adjustitem_Respository: Repository<prodtype_adjustitem>, // @InjectRepository(prodtype_adjustitem, 'onlinemenu')
-  // @InjectRepository(prodtype, 'onlinemenu')
+  constructor() // @InjectRepository(prodtype, 'onlinemenu') // private type_adjustitem_Respository: Repository<prodtype_adjustitem>, // @InjectRepository(prodtype_adjustitem, 'onlinemenu')
   // private prodtype_Respository: Repository<prodtype>,
   {}
 

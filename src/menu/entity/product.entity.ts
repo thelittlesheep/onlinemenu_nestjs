@@ -5,14 +5,14 @@ import {
   ManyToOne,
   PrimaryGeneratedColumn,
   JoinColumn,
+  OneToMany,
 } from 'typeorm';
 import { category } from './category.entity';
 // import { Tproduct } from 'menu/interface/menu.interface';
 import { ApiProperty } from '@nestjs/swagger';
+import { order_product } from './order_product.entity';
 
-
-
-@Entity({name:'Product'})
+@Entity({ name: 'Product' })
 export class product {
   @PrimaryGeneratedColumn()
   product_id?: number;
@@ -26,12 +26,15 @@ export class product {
   @Column({ name: 'category_id', type: 'tinyint', select: false })
   category_id?: number;
 
-  @Column({ type: 'text'})
-  product_image?:string
+  @Column({ type: 'text', default: '' })
+  product_image?: string;
 
   @ManyToOne(() => category, (category) => category.products, {
     nullable: false,
   })
   @JoinColumn({ name: 'category_id' })
   categoryid?: category;
+
+  @OneToMany(() => order_product, (order_product) => order_product.orders)
+  Order_Product?: order_product;
 }

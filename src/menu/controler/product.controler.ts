@@ -44,12 +44,12 @@ export class productcontroller {
   }
 
   @Get()
-  getProductByCategoryGroup(){
+  getProductByCategoryGroup() {
     return this.product_Service.getProductByCategoryGroup();
   }
 
-//   @Get()
-//   getCategoriesAdjustitemByAdjusttype(){
-//     return this.product_Service.getCategoriesAdjustitemByAdjusttype()
-//   }
+  //   @Get()
+  //   getCategoriesAdjustitemByAdjusttype(){
+  //     return this.product_Service.getCategoriesAdjustitemByAdjusttype()
+  //   }
 }

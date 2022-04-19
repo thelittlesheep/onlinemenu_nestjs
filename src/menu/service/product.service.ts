@@ -53,32 +53,30 @@ export class ProductService {
 
   async getCategoriesAdjustitemByAdjusttype() {
     return await this.adjusttype_Respository
-    .createQueryBuilder('adjusttype')
-    .leftJoinAndSelect('adjusttype.adjustitems','adjustitem')
-    .getMany()
+      .createQueryBuilder('adjusttype')
+      .leftJoinAndSelect('adjusttype.adjustitems', 'adjustitem')
+      .getMany();
   }
 
-  async getProductByCategoryGroup(){
-    const res = await this.category_Respository
-    .find({
-      join:{
-        alias:'category',
-        leftJoinAndSelect:{
-          product:'category.products',
-          adjusttype:'category.adjusttypes',
-          adjustitem:'adjusttype.adjustitems',
-        }
+  async getProductByCategoryGroup() {
+    const res = await this.category_Respository.find({
+      join: {
+        alias: 'category',
+        leftJoinAndSelect: {
+          product: 'category.products',
+          adjusttype: 'category.adjusttypes',
+          adjustitem: 'adjusttype.adjustitems',
+        },
       },
-    })
+    });
     // .createQueryBuilder('category')
     // .leftJoinAndSelect('category.products', 'product')
     // .leftJoinAndSelect('category.adjusttypes','adjusttype')
     // .leftJoinAndSelect('adjusttype.adjustitems','adjustitem')
     // .getMany()
 
-    return res
+    return res;
   }
-
 }
 
 class getproductby {
@@ -106,5 +104,3 @@ class getproductby {
     return res;
   }
 }
-
-

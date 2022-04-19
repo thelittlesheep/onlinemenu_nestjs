@@ -8,7 +8,7 @@ import {
 import { order } from './order.entity';
 import { OneToMany } from 'typeorm';
 
-@Entity({name:'User'})
+@Entity({ name: 'User' })
 export class user {
   @PrimaryGeneratedColumn()
   user_id?: number;
@@ -30,7 +30,7 @@ export class user {
 
   @Column({ default: 0 })
   user_age?: number;
-  
+
   // Foreign Key
   // @Column({ name: 'order_id', type: 'int', select: false, nullable: true })
   // order_id?: number;

@@ -1,8 +1,15 @@
-import { Column, Entity, JoinTable, ManyToMany, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
+import {
+  Column,
+  Entity,
+  JoinTable,
+  ManyToMany,
+  OneToMany,
+  PrimaryGeneratedColumn,
+} from 'typeorm';
 import { adjustitem } from './adjustitem.entity';
 import { category } from './category.entity';
 
-@Entity({name:'Adjusttype'})
+@Entity({ name: 'Adjusttype' })
 export class adjusttype {
   @PrimaryGeneratedColumn()
   adjusttype_id?: number;
@@ -19,16 +26,17 @@ export class adjusttype {
   // @OneToMany(()=>adjustitem,(adjustitem)=>adjustitem.adjusttype)
   // adjustitems?:adjustitem[]
 
-    @ManyToMany(()=>adjustitem)
-    @JoinTable({
-      name:'Adjusttype_Adjustitem',
-      joinColumn:{
-        name:'adjusttype_id',
-        referencedColumnName:'adjusttype_id'
-      },inverseJoinColumn:{
-        name:'adjustitem_id',
-        referencedColumnName:'adjustitem_id'
-      }
-    })
-    adjustitems?:adjustitem[]
+  @ManyToMany(() => adjustitem)
+  @JoinTable({
+    name: 'Adjusttype_Adjustitem',
+    joinColumn: {
+      name: 'adjusttype_id',
+      referencedColumnName: 'adjusttype_id',
+    },
+    inverseJoinColumn: {
+      name: 'adjustitem_id',
+      referencedColumnName: 'adjustitem_id',
+    },
+  })
+  adjustitems?: adjustitem[];
 }

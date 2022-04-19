@@ -1,8 +1,17 @@
-import { Column, Entity,  PrimaryGeneratedColumn, ManyToMany, ManyToOne, JoinColumn, JoinTable } from 'typeorm';
+import {
+  Column,
+  Entity,
+  PrimaryGeneratedColumn,
+  ManyToMany,
+  ManyToOne,
+  JoinColumn,
+  JoinTable,
+} from 'typeorm';
 import { adjusttype } from './adjusttype.entity';
 import { category } from './category.entity';
+import { order_product_adjustitem } from './order_product_adjustitem.entity';
 
-@Entity({name:'Adjustitem'})
+@Entity({ name: 'Adjustitem' })
 export class adjustitem {
   @PrimaryGeneratedColumn()
   adjustitem_id?: number;
@@ -13,8 +22,14 @@ export class adjustitem {
   @Column({ type: 'smallint' })
   adjustitem_priceadjust?: number;
 
-  @Column({ name: 'adjusttype_id',type: 'tinyint' })
-  adjusttype_id?:number
+  @Column({ name: 'adjusttype_id', type: 'tinyint' })
+  adjusttype_id?: number;
+
+  @ManyToOne(
+    () => order_product_adjustitem,
+    (order_product_adjustitem) => order_product_adjustitem.adjustitems,
+  )
+  order_product_adjustitems?: order_product_adjustitem;
 
   // @ManyToOne(() => adjusttype, (adjusttype) => adjusttype.adjustitems, { nullable: false })
   // @JoinColumn({ name: 'adjusttype_id' })
