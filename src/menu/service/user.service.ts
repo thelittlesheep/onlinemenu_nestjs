@@ -32,10 +32,11 @@ export class UserService {
         alias: 'user',
         leftJoinAndSelect: {
           order: 'user.orders',
-          product: 'order.products',
+          order_product: 'order.Order_Product',
+          product: 'order_product.products',
         },
       },
-      where: { id: id },
+      where: { user_id: id },
     });
     return res;
   }

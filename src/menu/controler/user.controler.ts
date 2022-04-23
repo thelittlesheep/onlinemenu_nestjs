@@ -1,13 +1,5 @@
-import {
-  Body,
-  Controller,
-  Get,
-  Param,
-  Post,
-  UsePipes,
-  ValidationPipe,
-} from '@nestjs/common';
-import { ApiBody, ApiParam } from '@nestjs/swagger';
+import { Body, Controller, Get, Param, Post } from '@nestjs/common';
+import { ApiParam } from '@nestjs/swagger';
 import { UserService } from '../service/user.service';
 
 import { userDTO } from '../DTO/userDTO';
@@ -18,10 +10,9 @@ export class usercontroller {
   constructor(protected user_Service: UserService) {}
 
   @Post()
-  create(@Body() userDTO: userDTO) {
-    console.log(userDTO);
-
-    return this.user_Service.adduser(userDTO);
+  create(@Body() user: userDTO) {
+    console.log(user);
+    return this.user_Service.adduser(user);
   }
 
   @Get(':id')
@@ -31,7 +22,7 @@ export class usercontroller {
     description:
       "Query an product basic profile by it's id. It will return an array.",
   })
-  read(@Param('id') id) {
+  getUserById(@Param('id') id) {
     return this.user_Service.getUserById(id);
   }
 

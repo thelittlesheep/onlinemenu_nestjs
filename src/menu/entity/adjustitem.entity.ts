@@ -6,6 +6,7 @@ import {
   ManyToOne,
   JoinColumn,
   JoinTable,
+  OneToMany,
 } from 'typeorm';
 import { adjusttype } from './adjusttype.entity';
 import { category } from './category.entity';
@@ -25,11 +26,12 @@ export class adjustitem {
   @Column({ name: 'adjusttype_id', type: 'tinyint' })
   adjusttype_id?: number;
 
-  @ManyToOne(
+  @OneToMany(
     () => order_product_adjustitem,
-    (order_product_adjustitem) => order_product_adjustitem.adjustitems,
+    (order_product_adjustitem) => order_product_adjustitem.adjustitem,
   )
-  order_product_adjustitems?: order_product_adjustitem;
+  @JoinColumn({ name: 'order_product_adjustitem_id' })
+  order_product_adjustitem?: order_product_adjustitem;
 
   // @ManyToOne(() => adjusttype, (adjusttype) => adjusttype.adjustitems, { nullable: false })
   // @JoinColumn({ name: 'adjusttype_id' })

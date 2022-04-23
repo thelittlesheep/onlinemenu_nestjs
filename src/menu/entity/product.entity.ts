@@ -1,6 +1,5 @@
 import {
   Column,
-  JoinTable,
   Entity,
   ManyToOne,
   PrimaryGeneratedColumn,
@@ -8,8 +7,6 @@ import {
   OneToMany,
 } from 'typeorm';
 import { category } from './category.entity';
-// import { Tproduct } from 'menu/interface/menu.interface';
-import { ApiProperty } from '@nestjs/swagger';
 import { order_product } from './order_product.entity';
 
 @Entity({ name: 'Product' })

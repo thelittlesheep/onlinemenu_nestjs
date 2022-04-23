@@ -21,18 +21,19 @@ export class order_product_adjustitem {
   @Column({ name: 'adjustitem_id', type: 'tinyint', select: false })
   adjustitem_id?: number;
 
-  @OneToMany(
+  @ManyToOne(
     () => adjustitem,
-    (adjustitem) => adjustitem.order_product_adjustitems,
+    (adjustitem) => adjustitem.order_product_adjustitem,
   )
-  adjustitems?: adjustitem;
+  @JoinColumn({ name: 'adjustitem_id' })
+  adjustitem?: adjustitem;
 
   @Column({ name: 'order_product_id', type: 'tinyint', select: false })
   order_product_id?: number;
 
   @ManyToOne(
     () => order_product,
-    (order_product) => order_product.order_product_adjustitems,
+    (order_product) => order_product.order_product_adjustitem,
   )
   @JoinColumn({ name: 'order_product_id' })
   order_products: order_product;

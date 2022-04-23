@@ -4,5 +4,3 @@ export interface Imenu<T> {
 
   getone(p: number): Promise<T>;
 }
-
-// export interface ImenuDetail extends type_adjustitem {}

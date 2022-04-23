@@ -4,7 +4,7 @@ import { TypeOrmModuleOptions } from '@nestjs/typeorm';
 
 export const RPI_LOGConfig: TypeOrmModuleOptions = {
   type: 'mariadb',
-  host: 'mariadb',
+  host: 'db.lshuang.tw',
   port: 3306,
   username: 'root',
   password: 'Hm3416077',
@@ -16,7 +16,7 @@ export const RPI_LOGConfig: TypeOrmModuleOptions = {
 export const onlinemenuConfig: TypeOrmModuleOptions = {
   name: 'onlinemenu',
   type: 'mariadb',
-  host: 'mariadb',
+  host: 'db.lshuang.tw',
   port: 3306,
   username: 'root',
   password: 'Hm3416077',

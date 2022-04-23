@@ -7,5 +7,4 @@ export class prodtypeResponseDto {
   id?: number;
   @ApiProperty()
   name?: string;
-  // @ApiProperty()
 }
