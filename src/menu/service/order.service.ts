@@ -95,23 +95,28 @@ export class OrderService {
       .where('order.order_id = :order_id', { order_id: id })
       .getOne();
 
-    const neworder = order.order_products.map((product) => {
-      const org_order_product_adjustitem = product.order_product_adjustitem;
-      delete product.order_product_adjustitem;
-      const newproduct = flat(product, {});
+    let neworder: any[] | string;
+    if (order) {
+      neworder = order.order_products.map((product) => {
+        const org_order_product_adjustitem = product.order_product_adjustitem;
+        delete product.order_product_adjustitem;
+        const newproduct = flat(product, {});
 
-      delete newproduct.product_id;
-      delete newproduct.product_price;
-      delete newproduct.product_image;
-      org_order_product_adjustitem.forEach((item) => {
-        delete item.order_product_adjustitem_id;
+        delete newproduct.product_id;
+        delete newproduct.product_price;
+        delete newproduct.product_image;
+        org_order_product_adjustitem.forEach((item) => {
+          delete item.order_product_adjustitem_id;
+        });
+        newproduct.order_product_adjustitem = org_order_product_adjustitem.map(
+          (item) => flat(item, {}),
+        );
+
+        return newproduct;
       });
-      newproduct.order_product_adjustitem = org_order_product_adjustitem.map(
-        (item) => flat(item, {}),
-      );
-
-      return newproduct;
-    });
+    } else {
+      neworder = 'order id=' + id + ' not found';
+    }
 
     return neworder;
   }
