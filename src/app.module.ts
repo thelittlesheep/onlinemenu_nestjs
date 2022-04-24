@@ -14,6 +14,8 @@ import { RPI_LOGConfig, onlinemenuConfig } from './typeorm.config';
 import { RpiTempModule } from './rpi-temp/rpi-temp.module';
 import { AppGateway } from './app.gateway';
 import { MenuModule } from './menu/menu.module';
+import { UsersModule } from './users/users.module';
+import { AuthModule } from './auth/auth.module';
 
 const routes: Routes = [
   // {
@@ -34,6 +36,10 @@ const routes: Routes = [
     path: 'menu',
     module: MenuModule,
   },
+  {
+    path: 'user',
+    module: UsersModule,
+  },
 ];
 @Module({
   imports: [
@@ -42,8 +48,8 @@ const routes: Routes = [
     TypeOrmModule.forRoot(onlinemenuConfig),
     // RpiTempModule,
     MenuModule,
-    // Apiv1Module,
-    // Apiv2Module,
+    UsersModule,
+    AuthModule,
   ],
   controllers: [AppController],
   providers: [AppService, AppGateway],

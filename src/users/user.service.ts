@@ -1,8 +1,8 @@
 import { Injectable } from '@nestjs/common';
 import { Repository } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
-import { user } from '../entity/user.entity';
-import { userDTO } from '../DTO/userDTO';
+import { user } from './user.entity';
+import { userDTO } from './userDTO';
 
 @Injectable()
 export class UserService {
@@ -26,14 +26,14 @@ export class UserService {
     return await this.user_Respository.save(varuser);
   }
 
-  async getUserById(id) {
-    const res = await this.user_Respository.find({
+  async getUserOrdersById(id) {
+    const res = await this.user_Respository.findOne({
       join: {
         alias: 'user',
         leftJoinAndSelect: {
           order: 'user.orders',
-          order_product: 'order.Order_Product',
-          product: 'order_product.products',
+          order_products: 'order.order_products',
+          product: 'order_products.product',
         },
       },
       where: { user_id: id },
@@ -47,7 +47,13 @@ export class UserService {
       .leftJoinAndSelect('user.orders', 'orders')
       .leftJoinAndSelect('orders.products', 'products')
       .select(['user', 'orders', 'products'])
-      .getMany();
+      .getOne();
     return res;
+  }
+
+  async finduser(user_account) {
+    return this.user_Respository.findOne({
+      where: { user_account: user_account },
+    });
   }
 }

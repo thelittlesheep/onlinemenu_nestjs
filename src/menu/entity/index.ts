@@ -1,7 +1,6 @@
 import { product } from './product.entity';
 import { category } from './category.entity';
 import { adjustitem } from './adjustitem.entity';
-import { user } from './user.entity';
 import { order } from './order.entity';
 import { adjusttype } from './adjusttype.entity';
 import { order_product } from './order_product.entity';
@@ -12,7 +11,6 @@ export const menuEntities = [
   category,
   adjustitem,
   adjusttype,
-  user,
   order,
   order_product,
   order_product_adjustitem,
@@ -23,6 +21,5 @@ export type allentitytype =
   | category
   | adjustitem
   | adjusttype
-  | user
   | order
   | order_product;

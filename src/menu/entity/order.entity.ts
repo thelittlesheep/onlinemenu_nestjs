@@ -5,7 +5,7 @@ import {
   OneToMany,
   PrimaryGeneratedColumn,
 } from 'typeorm';
-import { user } from './user.entity';
+import { user } from '../../users/user.entity';
 import { ManyToOne } from 'typeorm';
 import { order_product } from './order_product.entity';
 
@@ -33,18 +33,4 @@ export class order {
 
   @OneToMany(() => order_product, (order_product) => order_product.orders)
   order_products?: order_product[];
-
-  // @ManyToMany(() => product)
-  // @JoinTable({
-  //   name: 'Order_Product',
-  //   joinColumn: {
-  //     name: 'order_id',
-  //     referencedColumnName: 'order_id',
-  //   },
-  //   inverseJoinColumn: {
-  //     name: 'product_id',
-  //     referencedColumnName: 'product_id',
-  //   },
-  // })
-  // products?: product[];
 }
