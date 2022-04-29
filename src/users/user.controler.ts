@@ -1,6 +1,7 @@
 import {
   Body,
   Controller,
+  Delete,
   Get,
   Param,
   Post,
@@ -10,7 +11,7 @@ import {
 import { ApiParam } from '@nestjs/swagger';
 import { UserService } from './user.service';
 
-import { userDTO } from './userDTO';
+import { userDTO } from './user.DTO';
 import { AuthService } from '../auth/auth.service';
 import { LocalAuthGuard } from '../auth/local-auth.guard';
 
@@ -24,15 +25,15 @@ export class usercontroller {
     return this.user_Service.adduser(user);
   }
 
-  @Get('/userorders/:id')
+  @Get('/userorders/:user_id')
   @ApiParam({
-    name: 'id',
+    name: 'user_id',
     example: '1',
     description:
       "Query an product basic profile by it's id. It will return an array.",
   })
-  getUserOrdersById(@Param('id') id) {
-    return this.user_Service.getUserOrdersById(id);
+  getUserOrders(@Param('user_id') user_id: number) {
+    return this.user_Service.getUserOrders(user_id);
   }
 
   @Get(':user_account')

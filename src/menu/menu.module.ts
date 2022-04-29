@@ -12,5 +12,6 @@ import { menuController } from './controler';
   // 在entity目錄下新增index.ts，把相關的entity export陣列方便管理
   imports: [TypeOrmModule.forFeature([...menuEntities], 'onlinemenu')],
   providers: [MenuService, ...menuSerivces],
+  exports: [MenuService, ...menuSerivces],
 })
 export class MenuModule {}

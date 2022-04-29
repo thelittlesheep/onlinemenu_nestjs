@@ -5,6 +5,7 @@ import { order_product } from 'menu/entity/order_product.entity';
 import { order_product_adjustitem } from 'menu/entity/order_product_adjustitem.entity';
 import { Connection, Repository } from 'typeorm';
 import { orderDTO } from '../DTO/orderDTO';
+import * as moment from 'moment';
 
 @Injectable()
 export class OrderService {
@@ -72,7 +73,7 @@ export class OrderService {
     }
   }
 
-  async getOrders(id) {
+  async getOrder(order_id) {
     const flat = (obj, out) => {
       Object.keys(obj).forEach((key) => {
         if (typeof obj[key] === 'object') {
@@ -92,7 +93,7 @@ export class OrderService {
         'order_product_adjustitem',
       )
       .leftJoinAndSelect('order_product_adjustitem.adjustitem', 'adjustitem')
-      .where('order.order_id = :order_id', { order_id: id })
+      .where('order.order_id = :order_id', { order_id: order_id })
       .getOne();
 
     let neworder: any[] | string;
@@ -103,7 +104,6 @@ export class OrderService {
         const newproduct = flat(product, {});
 
         delete newproduct.product_id;
-        delete newproduct.product_price;
         delete newproduct.product_image;
         org_order_product_adjustitem.forEach((item) => {
           delete item.order_product_adjustitem_id;
@@ -115,9 +115,30 @@ export class OrderService {
         return newproduct;
       });
     } else {
-      neworder = 'order id=' + id + ' not found';
+      neworder = 'order id=' + order_id + ' not found';
     }
 
     return neworder;
+  }
+
+  async deleteUserOrder(user_id: number, order_id: number) {
+    const res = await this.order_Respository.findOne({
+      where: { user_id: user_id, order_id: order_id },
+    });
+    console.log(moment(res.order_orderdate) < moment());
+    console.log(moment(res.order_orderdate).format('YYYY-MM-DD  HH:mm:ss'));
+    if (moment(res.order_pickupdate) < moment()) {
+      return 'order can not be deleted';
+    } else {
+      if (res) {
+        await this.order_Respository.delete({
+          user_id: user_id,
+          order_id: order_id,
+        });
+        return 'Order has been deleted successfully';
+      } else {
+        return 'Order not found';
+      }
+    }
   }
 }

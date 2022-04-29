@@ -31,6 +31,6 @@ export class order {
   @JoinColumn({ name: 'user_id' })
   userid?: user;
 
-  @OneToMany(() => order_product, (order_product) => order_product.orders)
+  @OneToMany(() => order_product, (order_product) => order_product.orders, {})
   order_products?: order_product[];
 }
