@@ -3,6 +3,7 @@ import {
   Entity,
   JoinColumn,
   OneToMany,
+  PrimaryColumn,
   PrimaryGeneratedColumn,
 } from 'typeorm';
 import { user } from '../../users/user.entity';
@@ -11,7 +12,7 @@ import { order_product } from './order_product.entity';
 
 @Entity({ name: 'Order' })
 export class order {
-  @PrimaryGeneratedColumn()
+  @PrimaryColumn()
   order_id?: number;
 
   @Column({ type: 'datetime' })

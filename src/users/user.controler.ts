@@ -12,34 +12,41 @@ import { ApiParam } from '@nestjs/swagger';
 import { UserService } from './user.service';
 
 import { userDTO } from './user.DTO';
-import { AuthService } from '../auth/auth.service';
-import { LocalAuthGuard } from '../auth/local-auth.guard';
+import { AuthenticatedGuard } from 'auth/authenticaed.guard';
+import { AllowAny } from 'auth/authenticaed.decorator';
 
 @Controller()
 export class usercontroller {
   constructor(protected user_Service: UserService) {}
 
   @Post()
-  create(@Body() user: userDTO) {
-    console.log(user);
+  @AllowAny()
+  createuser(@Body() user: userDTO) {
     return this.user_Service.adduser(user);
   }
 
-  @Get('/userorders/:user_id')
-  @ApiParam({
-    name: 'user_id',
-    example: '1',
-    description:
-      "Query an product basic profile by it's id. It will return an array.",
-  })
-  getUserOrders(@Param('user_id') user_id: number) {
-    return this.user_Service.getUserOrders(user_id);
+  @UseGuards(AuthenticatedGuard)
+  @Get()
+  getuser(@Request() req) {
+    return req.user;
   }
 
-  @Get(':user_account')
-  getuserbyuser_account(@Param('user_account') user_account) {
-    return this.user_Service.finduser(user_account);
+  // @UseGuards(AuthenticatedGuard)
+  @Get('/userInfoAndOrders/')
+  // @ApiParam({
+  //   name: 'user_id',
+  //   example: '1',
+  //   description:
+  //     "Query an product basic profile by it's id. It will return an array.",
+  // })
+  getUserOrders(@Request() req) {
+    return this.user_Service.getUserOrders(req.user.user_id);
   }
+
+  // @Get(':user_account')
+  // getuserbyuser_account(@Param('user_account') user_account) {
+  //   return this.user_Service.finduser(user_account);
+  // }
 
   // @Get('getuserbyQB')
   // getuser() {

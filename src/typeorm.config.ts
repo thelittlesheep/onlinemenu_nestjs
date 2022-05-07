@@ -1,14 +1,14 @@
 import { TypeOrmModuleOptions } from '@nestjs/typeorm';
-// import { Products } from 'menu/entity/products.entity';
-// import { TempData } from 'rpi-temp/entity/Temp_data.entity';
+import 'dotenv/config';
 
 export const RPI_LOGConfig: TypeOrmModuleOptions = {
+  name: 'RPI_LOG',
   type: 'mariadb',
-  host: 'db.lshuang.tw',
-  port: 3306,
-  username: 'root',
-  password: 'Hm3416077',
-  database: 'RPI_LOG',
+  host: process.env.DB_REMOTE_HOST,
+  port: Number(process.env.DB_REMOTE_port),
+  username: process.env.DB_REMOTE_username,
+  password: process.env.DB_REMOTE_password,
+  database: process.env.DB_REMOTE_rpi_database,
   // entities: [TempData],
   autoLoadEntities: true,
   synchronize: true,
@@ -16,11 +16,11 @@ export const RPI_LOGConfig: TypeOrmModuleOptions = {
 export const onlinemenuConfig: TypeOrmModuleOptions = {
   name: 'onlinemenu',
   type: 'mariadb',
-  host: 'db.lshuang.tw',
-  port: 3306,
-  username: 'root',
-  password: 'Hm3416077',
-  database: 'onlinemenu',
+  host: process.env.DB_REMOTE_HOST,
+  port: Number(process.env.DB_REMOTE_port),
+  username: process.env.DB_REMOTE_username,
+  password: process.env.DB_REMOTE_password,
+  database: process.env.DB_REMOTE_onlinemenu_database,
   // entities: [Products],
   autoLoadEntities: true,
   synchronize: true,

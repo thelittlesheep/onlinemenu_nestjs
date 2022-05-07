@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { HttpCode, HttpException, Injectable } from '@nestjs/common';
 import { Repository } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
 import { user } from './user.entity';
@@ -25,10 +25,21 @@ export class UserService {
     varuser.user_phone = data.user_phone;
     varuser.user_age = data.user_age;
 
-    // const id = await this.user_Respository.getId(varuser);
-    // console.log(id);
+    const dbuser = await this.finduser(data.user_account);
 
-    return await this.user_Respository.save(varuser);
+    if (dbuser) {
+      throw new HttpException('帳號已存在', 409);
+    }
+
+    const user_id = (await this.user_Respository.save(varuser)).user_id;
+    if (!data.user_name) {
+      await this.user_Respository.update(
+        { user_id: user_id }, // where condition
+        { user_name: `User${user_id}` }, // update data
+      );
+    }
+
+    return { statusCode: 201, message: '成功建立帳號' };
   }
 
   async getUserOrders(user_id: number) {
@@ -45,19 +56,21 @@ export class UserService {
       },
       where: { user_id: user_id },
     });
+    if (user) {
+      newuser = { orders: user.orders };
 
-    newuser = { ...user };
+      await Promise.all(
+        newuser.orders.map(async (order) => {
+          delete order.user_id;
+          order.order_products = await this.order_Service.getOrder(
+            order.order_id,
+          );
+        }),
+      );
 
-    await Promise.all(
-      newuser.orders.map(async (order) => {
-        delete order.user_id;
-        order.order_products = await this.order_Service.getOrder(
-          order.order_id,
-        );
-      }),
-    );
-
-    return newuser;
+      return newuser;
+    }
+    throw new HttpException('查無此使用者', 404);
   }
 
   async getuserbyQueryBuilder() {

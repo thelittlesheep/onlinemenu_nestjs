@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { HttpException, Injectable } from '@nestjs/common';
 import { InjectConnection, InjectRepository } from '@nestjs/typeorm';
 import { order } from 'menu/entity/order.entity';
 import { order_product } from 'menu/entity/order_product.entity';
@@ -28,6 +28,7 @@ export class OrderService {
     varorder.order_quantity = data.order_quantity;
     varorder.order_orderdate = data.order_orderdate;
     varorder.order_pickupdate = data.order_pickupdate;
+    varorder.order_id = (Date.now() % 100000) + data.user_id;
     // create order
     const queryRunner = this.connection.createQueryRunner();
     await queryRunner.connect();
@@ -62,12 +63,14 @@ export class OrderService {
           await queryRunner.commitTransaction();
         } catch (e) {
           console.log(e);
+          throw new HttpException(e, 500);
         } finally {
           await queryRunner.release();
         }
       });
     } catch (e) {
       console.log(e);
+      throw new HttpException(e, 500);
     } finally {
       await queryRunner.release();
     }
@@ -125,20 +128,24 @@ export class OrderService {
     const res = await this.order_Respository.findOne({
       where: { user_id: user_id, order_id: order_id },
     });
-    console.log(moment(res.order_orderdate) < moment());
-    console.log(moment(res.order_orderdate).format('YYYY-MM-DD  HH:mm:ss'));
-    if (moment(res.order_pickupdate) < moment()) {
-      return 'order can not be deleted';
-    } else {
-      if (res) {
-        await this.order_Respository.delete({
-          user_id: user_id,
-          order_id: order_id,
-        });
-        return 'Order has been deleted successfully';
+
+    if (res) {
+      if (moment(res.order_pickupdate) < moment()) {
+        throw new HttpException('order can not be deleted', 409);
       } else {
-        return 'Order not found';
+        if (res) {
+          await this.order_Respository.delete({
+            user_id: user_id,
+            order_id: order_id,
+          });
+          return {
+            status: 200,
+            message: 'Order has been deleted successfully',
+          };
+        }
       }
     }
+
+    throw new HttpException('Order not found', 404);
   }
 }

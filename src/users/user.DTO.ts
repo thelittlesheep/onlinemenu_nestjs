@@ -5,14 +5,19 @@ import {
   IsNumberString,
   IsString,
   IsOptional,
+  Matches,
 } from 'class-validator';
 
 export class userDTO {
-  @IsString()
+  @Matches(/^[a-zA-Z]\w{5,9}$/, {
+    message: 'user_account 開頭必需為英文字母，且需為6-9位元',
+  })
   @ApiProperty()
   user_account: string;
 
-  @IsString()
+  @Matches(/^\w{6,24}$/, {
+    message: 'user_password 密碼是6-24個字符',
+  })
   @ApiProperty()
   user_password: string;
 

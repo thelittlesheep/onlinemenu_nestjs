@@ -3,31 +3,18 @@ import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { RouterModule, Routes } from 'nest-router';
 import { TypeOrmModule } from '@nestjs/typeorm';
-
 import { RPI_LOGConfig, onlinemenuConfig } from './typeorm.config';
-
-// import { UsersModulev1 } from './apiv1/Usersv1/users.module';
-// import { UsersModulev2 } from './apiv2/Usersv2/users.module';
-// import { Apiv1Module } from './apiv1/apiv1.module';
-// import { Apiv2Module } from './apiv2/apiv2.module';
-
 import { RpiTempModule } from './rpi-temp/rpi-temp.module';
 import { AppGateway } from './app.gateway';
 import { MenuModule } from './menu/menu.module';
 import { UsersModule } from './users/users.module';
 import { AuthModule } from './auth/auth.module';
+import { APP_GUARD, Reflector } from '@nestjs/core';
+import { AuthenticatedGuard } from 'auth/authenticaed.guard';
+import { ConfigModule } from '@nestjs/config';
+import configuration from 'configuration';
 
 const routes: Routes = [
-  // {
-  //   path: 'v1',
-  //   module: Apiv1Module,
-  //   children: [{ path: 'users', module: UsersModulev1 }],
-  // },
-  // {
-  //   path: 'v2',
-  //   module: Apiv2Module,
-  //   children: [{ path: 'users', module: UsersModulev2 }],
-  // },
   // {
   //   path: 'rpi_temp',
   //   module: RpiTempModule,
@@ -50,8 +37,21 @@ const routes: Routes = [
     MenuModule,
     UsersModule,
     AuthModule,
+    ConfigModule.forRoot({
+      envFilePath: '.env',
+      load: [configuration],
+      isGlobal: true,
+    }),
   ],
   controllers: [AppController],
-  providers: [AppService, AppGateway],
+  providers: [
+    AppService,
+    AppGateway,
+    {
+      provide: APP_GUARD,
+      useFactory: (ref) => new AuthenticatedGuard(ref),
+      inject: [Reflector],
+    },
+  ],
 })
 export class AppModule {}
