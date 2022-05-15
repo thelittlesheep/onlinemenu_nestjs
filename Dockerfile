@@ -1,5 +1,8 @@
 FROM node:lts-alpine3.14 AS development
 
+ARG NODE_ENV=production
+ENV NODE_ENV=${NODE_ENV}
+
 WORKDIR /usr/src/app
 
 COPY ./package*.json ./

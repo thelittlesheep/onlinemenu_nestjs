@@ -76,7 +76,7 @@ export class OrderService {
     }
   }
 
-  async getOrder(order_id) {
+  async getOrder(user_id: number, order_id: number) {
     const flat = (obj, out) => {
       Object.keys(obj).forEach((key) => {
         if (typeof obj[key] === 'object') {
@@ -97,6 +97,7 @@ export class OrderService {
       )
       .leftJoinAndSelect('order_product_adjustitem.adjustitem', 'adjustitem')
       .where('order.order_id = :order_id', { order_id: order_id })
+      .andWhere('order.user_id = :user_id', { user_id: user_id })
       .getOne();
 
     let neworder: any[] | string;

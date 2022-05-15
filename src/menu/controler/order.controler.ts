@@ -27,8 +27,8 @@ export class ordercontroller {
     example: '1',
     description: "Query an order detail by it's id. It will return an Object.",
   })
-  getOrder(@Param() order_id: number) {
-    return this.order_Service.getOrder(order_id);
+  getOrder(@Request() req, @Param('order_id') order_id: number) {
+    return this.order_Service.getOrder(req.user.user_id, order_id);
   }
 
   @Delete('/:order_id')

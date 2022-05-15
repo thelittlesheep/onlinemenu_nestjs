@@ -16,17 +16,18 @@ const RedisStore = connectRedis(session);
 const redisClient = createClient({ host: 'onlinemenu_redis', port: 6379 });
 
 async function bootstrap() {
-  const app = await NestFactory.create(AppModule, { cors: true });
+  const app = await NestFactory.create(AppModule);
   app.enableCors({
     origin: [
       'http://localhost:3001',
-      'http://localhost:3000',
+      'http://localhost:3002',
       'http://localhost:4173',
       'https://lshuang.tw',
     ],
     methods: 'GET,HEAD,PUT,PATCH,POST,DELETE,OPTIONS',
     credentials: true,
     allowedHeaders: ['Content-Type', 'Authorization'],
+    // exposedHeaders: ['Set-Cookie'],
   });
   app.useGlobalPipes(new ValidationPipe());
   // section of session middleware
@@ -36,7 +37,13 @@ async function bootstrap() {
       secret: process.env.SESSION_SECRET,
       resave: false,
       saveUninitialized: false,
-      cookie: { maxAge: 3600000, httpOnly: false },
+      cookie: {
+        // 設定 session cookie 的 domain 屬性。
+        domain:
+          process.env.NODE_ENV === 'production' ? 'lshuang.tw' : 'localhost',
+        maxAge: 3600000,
+        httpOnly: false,
+      },
       name: 'user_session',
     }),
   );

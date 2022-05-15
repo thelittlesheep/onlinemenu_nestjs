@@ -63,6 +63,7 @@ export class UserService {
         newuser.orders.map(async (order) => {
           delete order.user_id;
           order.order_products = await this.order_Service.getOrder(
+            user.user_id,
             order.order_id,
           );
         }),
