@@ -43,8 +43,8 @@ export class OrderService {
         await queryRunner.startTransaction();
         const varorder_product = new order_product();
         varorder_product.order_product_quantity =
-          order_poduct.shoppingProduct_qty;
-        varorder_product.product_id = order_poduct.product_id;
+          order_poduct.order_product_quantity;
+        varorder_product.product_id = order_poduct.order_product_id;
 
         try {
           varorder_product.order_id = orderId;
@@ -53,7 +53,7 @@ export class OrderService {
             varorder_product,
           );
 
-          order_poduct.shoppingProduct_adjustitems.forEach(async (item) => {
+          order_poduct.order_product_adjustitem.forEach(async (item) => {
             await queryRunner.manager.insert(order_product_adjustitem, {
               order_product_id: order_productID,
               adjustitem_id: item.adjustitem_id,

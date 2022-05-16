@@ -15,9 +15,9 @@ export class orderDTO {
   @IsArray()
   @ApiProperty()
   order_products?: Array<{
-    product_id?: number;
-    shoppingProduct_qty?: number;
-    shoppingProduct_adjustitems?: Array<{
+    order_product_id?: number;
+    order_product_quantity?: number;
+    order_product_adjustitem?: Array<{
       adjustitem_id: number;
       adjustitem_name: string;
       adjustitem_priceadjust: number;
