@@ -5,30 +5,32 @@ import {
   Get,
   Param,
   Post,
+  Query,
   Request,
 } from '@nestjs/common';
 import { OrderService } from '../service/order.service';
 import { orderDTO } from '../DTO/orderDTO';
-import { ApiBody, ApiParam } from '@nestjs/swagger';
+import { ApiParam, ApiQuery } from '@nestjs/swagger';
 
 @Controller('order')
 export class ordercontroller {
   constructor(protected order_Service: OrderService) {}
 
-  @ApiBody({ description: 'body:any someMethod', type: [orderDTO] })
   @Post()
+  @ApiParam(orderDTO)
   createOrder(@Body() orders: orderDTO) {
     return this.order_Service.addToOrderTable(orders);
   }
 
-  @Get(':order_id')
-  @ApiParam({
+  @Get('')
+  @ApiQuery({
     name: 'order_id',
     example: '1',
     description: "Query an order detail by it's id. It will return an Object.",
   })
-  getOrder(@Request() req, @Param('order_id') order_id: number) {
-    return this.order_Service.getOrder(req.user.user_id, order_id);
+  getOrder(@Request() req, @Query() queryParams: { order_id: number }) {
+    console.log(queryParams.order_id);
+    return this.order_Service.getOrder(req.user.user_id, queryParams.order_id);
   }
 
   @Delete('/:order_id')

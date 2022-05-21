@@ -9,7 +9,6 @@ export const RPI_LOGConfig: TypeOrmModuleOptions = {
   username: process.env.DB_REMOTE_username,
   password: process.env.DB_REMOTE_password,
   database: process.env.DB_REMOTE_rpi_database,
-  // entities: [TempData],
   autoLoadEntities: true,
   synchronize: true,
 };
@@ -21,7 +20,6 @@ export const onlinemenuConfig: TypeOrmModuleOptions = {
   username: process.env.DB_REMOTE_username,
   password: process.env.DB_REMOTE_password,
   database: process.env.DB_REMOTE_onlinemenu_database,
-  // entities: [Products],
   autoLoadEntities: true,
   synchronize: true,
 };

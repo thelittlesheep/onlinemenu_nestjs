@@ -1,4 +1,4 @@
-import { ApiProperty } from '@nestjs/swagger';
+import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 import {
   IsEmail,
   IsNumber,
@@ -10,37 +10,40 @@ import {
 
 export class userDTO {
   @Matches(/^[a-zA-Z]\w{5,9}$/, {
-    message: 'user_account 開頭必需為英文字母，且需為6-9位元',
+    message: 'user_account 開頭必需為英文字母，且需為6-9字元',
   })
-  @ApiProperty()
+  @ApiProperty({ description: '使用者帳號，開頭必需為英文字母，且需為6-9字元' })
   user_account: string;
 
   @Matches(/^\w{6,24}$/, {
-    message: 'user_password 密碼是6-24個字符',
+    message: 'user_password 密碼是6-24個字元',
   })
-  @ApiProperty()
+  @ApiProperty({ description: '使用者密碼，必須為6-24個字元' })
   user_password: string;
 
   @IsOptional()
   @IsString()
-  @ApiProperty({ example: 'Huang' })
-  user_name: string;
+  @ApiPropertyOptional({ example: 'Example', description: '使用者姓名' })
+  user_name?: string;
 
   @IsOptional()
   @IsEmail()
-  @ApiProperty({ description: '輸入欲註冊之信箱' })
-  user_email: string;
+  @ApiPropertyOptional({
+    example: 'example@example.com',
+    description: '使用者信箱',
+  })
+  user_email?: string;
 
   @IsOptional()
   @IsNumberString()
-  @ApiProperty({ example: '0910123456' })
-  user_phone: string;
+  @ApiPropertyOptional({ example: '0912345678', description: '使用者連絡電話' })
+  user_phone?: string;
 
   @IsOptional()
   @IsNumber({
     allowInfinity: false,
     allowNaN: true,
   })
-  @ApiProperty()
-  user_age: number;
+  @ApiPropertyOptional({ example: '20', description: '使用者年齡' })
+  user_age?: number;
 }
