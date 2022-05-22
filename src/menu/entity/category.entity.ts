@@ -21,30 +21,20 @@ export class category {
   @OneToMany(() => product, (products) => products.categoryid)
   products?: product[];
 
-  @ManyToMany(() => adjusttype)
-  @JoinTable({
-    name: 'Category_Adjusttype',
-    joinColumn: {
-      name: 'category_id',
-      referencedColumnName: 'category_id',
-    },
-    inverseJoinColumn: {
-      name: 'adjusttype_id',
-      referencedColumnName: 'adjusttype_id',
-    },
-  })
+  @OneToMany(() => adjusttype, (adjusttypes) => adjusttypes.categoryid)
   adjusttypes?: adjusttype[];
 
-  // @ManyToMany(()=>adjustitem)
+  // @ManyToMany(() => adjusttype)
   // @JoinTable({
-  //   name:'Category_Adjustitem',
-  //   joinColumn:{
-  //     name:'category_id',
-  //     referencedColumnName:'category_id'
-  //   },inverseJoinColumn:{
-  //     name:'adjustitem_id',
-  //     referencedColumnName:'adjustitem_id'
-  //   }
+  //   name: 'Category_Adjusttype',
+  //   joinColumn: {
+  //     name: 'category_id',
+  //     referencedColumnName: 'category_id',
+  //   },
+  //   inverseJoinColumn: {
+  //     name: 'adjusttype_id',
+  //     referencedColumnName: 'adjusttype_id',
+  //   },
   // })
-  // adjustitems?:adjustitem[]
+  // adjusttypes?: adjusttype[];
 }

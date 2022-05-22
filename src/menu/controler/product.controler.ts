@@ -1,12 +1,19 @@
-import { Controller, Get, Param } from '@nestjs/common';
-import { ApiCreatedResponse, ApiParam } from '@nestjs/swagger';
+import { Controller, Get } from '@nestjs/common';
 import { ProductService } from '../service/product.service';
-import { apiResponseDto } from '../apiresponse';
 import { AllowAny } from 'auth/authenticaed.decorator';
+import { ApiTags } from '@nestjs/swagger';
 
+@ApiTags('product')
 @Controller('product')
 export class productcontroller {
   constructor(protected product_Service: ProductService) {}
+
+  @Get('')
+  @AllowAny()
+  getProductByCategoryGroup() {
+    return this.product_Service.getProductByCategoryGroup();
+  }
+
   // @Get('productbyid/:id')
   // @ApiParam({
   //   name: 'id',
@@ -43,12 +50,6 @@ export class productcontroller {
   // getdetail(@Param() param: { id: string }) {
   //   return this.product_Service.getproductDetail(param.id);
   // }
-
-  @Get()
-  @AllowAny()
-  getProductByCategoryGroup() {
-    return this.product_Service.getProductByCategoryGroup();
-  }
 
   //   @Get()
   //   getCategoriesAdjustitemByAdjusttype(){

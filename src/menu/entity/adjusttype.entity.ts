@@ -1,8 +1,10 @@
 import {
   Column,
   Entity,
+  JoinColumn,
   JoinTable,
   ManyToMany,
+  ManyToOne,
   OneToMany,
   PrimaryGeneratedColumn,
 } from 'typeorm';
@@ -25,6 +27,12 @@ export class adjusttype {
 
   // @OneToMany(()=>adjustitem,(adjustitem)=>adjustitem.adjusttype)
   // adjustitems?:adjustitem[]
+
+  @ManyToOne(() => category, (category) => category.products, {
+    nullable: false,
+  })
+  @JoinColumn({ name: 'category_id' })
+  categoryid?: category;
 
   @ManyToMany(() => adjustitem)
   @JoinTable({

@@ -50,23 +50,7 @@ export class usercontroller {
 
   // @UseGuards(AuthenticatedGuard)
   @Get('/userInfoAndOrders/')
-  // @ApiParam({
-  //   name: 'user_id',
-  //   example: '1',
-  //   description:
-  //     "Query an product basic profile by it's id. It will return an array.",
-  // })
   getUserOrders(@Request() req) {
     return this.user_Service.getUserOrders(req.user.user_id);
   }
-
-  // @Get(':user_account')
-  // getuserbyuser_account(@Param('user_account') user_account) {
-  //   return this.user_Service.finduser(user_account);
-  // }
-
-  // @Get('getuserbyQB')
-  // getuser() {
-  //   return this.user_Service.getuserbyQueryBuilder();
-  // }
 }

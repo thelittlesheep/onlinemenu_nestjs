@@ -45,21 +45,18 @@ export class OrderService {
         varorder_product.order_product_quantity =
           order_poduct.order_product_quantity;
         varorder_product.product_id = order_poduct.order_product_id;
-
         try {
           varorder_product.order_id = orderId;
           await queryRunner.manager.save(varorder_product);
           const order_productID = await queryRunner.manager.getId(
             varorder_product,
           );
-
           order_poduct.order_product_adjustitem.forEach(async (item) => {
             await queryRunner.manager.insert(order_product_adjustitem, {
               order_product_id: order_productID,
               adjustitem_id: item.adjustitem_id,
             });
           });
-
           await queryRunner.commitTransaction();
         } catch (e) {
           console.log(e);

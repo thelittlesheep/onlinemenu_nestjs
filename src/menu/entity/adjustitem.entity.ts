@@ -23,9 +23,6 @@ export class adjustitem {
   @Column({ type: 'smallint' })
   adjustitem_priceadjust?: number;
 
-  @Column({ name: 'adjusttype_id', type: 'tinyint' })
-  adjusttype_id?: number;
-
   @OneToMany(
     () => order_product_adjustitem,
     (order_product_adjustitem) => order_product_adjustitem.adjustitem,

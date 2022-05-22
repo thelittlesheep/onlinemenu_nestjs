@@ -1,6 +1,25 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { IsArray, IsNumber } from 'class-validator';
 
+class order_product_adjustitem_schema {
+  @ApiProperty()
+  adjustitem_id?: number;
+  @ApiProperty()
+  adjustitem_name?: number;
+  @ApiProperty()
+  adjustitem_priceadjust?: number;
+  @ApiProperty()
+  adjusttype_id?: number;
+}
+class order_products_schema {
+  @ApiProperty()
+  order_product_id?: number;
+  @ApiProperty()
+  order_product_quantity?: number;
+  @ApiProperty({ type: [order_product_adjustitem_schema] })
+  order_product_adjustitem?: order_product_adjustitem_schema[];
+}
+
 export class orderDTO {
   @IsNumber()
   @ApiProperty()
@@ -13,15 +32,8 @@ export class orderDTO {
   @ApiProperty()
   order_pickupdate?: string;
   @IsArray()
-  @ApiProperty()
-  order_products?: Array<{
-    order_product_id?: number;
-    order_product_quantity?: number;
-    order_product_adjustitem?: Array<{
-      adjustitem_id: number;
-      adjustitem_name: string;
-      adjustitem_priceadjust: number;
-      adjusttype_id?: number;
-    }>;
-  }>;
+  @ApiProperty({
+    type: [order_products_schema],
+  })
+  order_products?: order_products_schema[];
 }
