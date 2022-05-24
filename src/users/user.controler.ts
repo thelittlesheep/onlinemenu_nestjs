@@ -29,7 +29,9 @@ export class usercontroller {
   }
 
   @Post('logout')
+  // @AllowAny()
   logout(@Request() req) {
+    // kill current session in redis
     req.session.destroy();
     return { msg: 'logout success' };
   }
