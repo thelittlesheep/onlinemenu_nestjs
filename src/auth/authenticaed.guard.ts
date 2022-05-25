@@ -20,19 +20,17 @@ export class AuthenticatedGuard implements CanActivate {
       context.getHandler(),
     );
     if (allowAny) return true;
-    console.log(request.user);
-
     if (request.user === undefined) {
       if (request.url === '/user/logout') {
         throw new HttpException('Already Logout Or Not Login yet', 401);
       }
-      throw new UnauthorizedException();
+      throw new UnauthorizedException('Already Logout Or Not Login yet');
     }
     if (request.user.user_id === params_user_id) {
       return true;
     } else {
       if (!params_user_id) return request.isAuthenticated();
-      throw new UnauthorizedException();
+      throw new UnauthorizedException('登入者與請求者不同，拒絕此請求');
     }
   }
 }

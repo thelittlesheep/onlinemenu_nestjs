@@ -12,26 +12,26 @@
 
 |功能|URI|HTTP Method|Request|Response|Response Status Code & Description|
 |:--:|:--:|:--:|:--:|:--:|:--|
-|登入|~/user/login|POST|{"user_account": String,"user_password": String}|credential cookie|401:錯誤的POST body<br>403:錯誤的帳號或密碼<br>201:成功登入
-|登出|~/user/logout|POST|credential cookie|-|401:已經登出或尚未登入<br>201:成功登出|
+|登入|~/users/login|POST|{"user_account": String,"user_password": String}|credential cookie|401:錯誤的POST body<br>403:錯誤的帳號或密碼<br>201:成功登入
+|登出|~/users/logout|POST|credential cookie|-|401:已經登出或尚未登入<br>201:成功登出|
 
 ### User Data
 
 |功能|URI|HTTP Method|Request|Response|Response Status Code & Description|
 |:--:|:--:|:--:|:--:|:--:|:--|
-|新增|~/user|POST|||404 \| 201|
-|修改|~/user/{user_id}|PUT\|PATCH|||404 \| 201|
-|查詢|~/user/{user_id}|GET|||404 \| 200|
+|新增|~/users|POST|||404 \| 201|
+|修改|~/users/:user_id|PUT\|PATCH|||404 \| 201|
+|查詢|~/users/:user_id|GET|||404 \| 200|
 |刪除|無實作|\-|\-|\-|\-|
 
-### Order Data
+### User Order Data
 
 |功能|URI|HTTP Method|Request|Response|Response Status Code & Description|
 |:--:|:--:|:--:|:--:|:--:|:--|
-|新增|~/order|POST|||404 \| 201|
-|修改|~/order/{order_id}?storeid={store_id}|PUT\|PATCH|||401 \| 201|
-|查詢|~/user/{order_id}?storeid={store_id}|GET|||404 \| 200|
-|刪除|無實作|\-|\-|\-|\-|
+|新增|~/:user_id/orders|POST|||404 \| 201|
+|修改|~/:user_id/orders/:order_id?storeid={store_id}|PUT\|PATCH|||401 \| 201|
+|查詢|~/:user_id/orders/:order_id?storeid={store_id}|GET|||404 \| 200|
+|刪除|~/:user_id/orders/:order_id?storeid={store_id}|DELETE|\-|\-|\-|
 
 ## 店家端
 

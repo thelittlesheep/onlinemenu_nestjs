@@ -24,7 +24,7 @@ const routes: Routes = [
     module: MenuModule,
   },
   {
-    path: 'user',
+    path: 'users',
     module: UsersModule,
   },
 ];

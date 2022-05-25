@@ -1,4 +1,4 @@
-import { HttpException, Injectable } from '@nestjs/common';
+import { HttpException, Injectable, NotFoundException } from '@nestjs/common';
 import { InjectConnection, InjectRepository } from '@nestjs/typeorm';
 import { order } from 'menu/entity/order.entity';
 import { order_product } from 'menu/entity/order_product.entity';
@@ -116,7 +116,8 @@ export class OrderService {
         return newproduct;
       });
     } else {
-      neworder = 'order id=' + order_id + ' not found';
+      // neworder = '訂單編號：' + order_id + ' 不存在';
+      throw new NotFoundException('訂單編號：' + order_id + ' 不存在');
     }
 
     return neworder;
@@ -144,6 +145,6 @@ export class OrderService {
       }
     }
 
-    throw new HttpException('Order not found', 404);
+    throw new NotFoundException('訂單編號：' + order_id + ' 不存在');
   }
 }

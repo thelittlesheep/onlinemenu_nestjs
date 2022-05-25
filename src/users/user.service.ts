@@ -1,12 +1,10 @@
-import { HttpCode, HttpException, Injectable } from '@nestjs/common';
+import { HttpException, Injectable } from '@nestjs/common';
 import { Repository } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
 import { user } from './user.entity';
-import { userDTO } from './user.DTO';
+import { userDTO } from './DTO/user.DTO';
 import { OrderService } from 'menu/service/order.service';
-import { order_product } from 'menu/entity/order_product.entity';
 import { IuserResponseDto } from './userResponse.DTO';
-import { orderDTO } from 'menu/DTO/orderDTO';
 
 @Injectable()
 export class UserService {
