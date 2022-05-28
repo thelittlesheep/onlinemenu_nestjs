@@ -22,7 +22,7 @@ export class OrderService {
   //   });
   // }
 
-  async addToOrderTable(data: orderDTO) {
+  async addOrder(data: orderDTO) {
     const varorder = new order();
     varorder.user_id = data.user_id;
     varorder.order_quantity = data.order_quantity;
@@ -123,7 +123,7 @@ export class OrderService {
     return neworder;
   }
 
-  async deleteUserOrder(user_id: number, order_id: number) {
+  async deleteOrder(user_id: number, order_id: number) {
     const res = await this.order_Respository.findOne({
       where: { user_id: user_id, order_id: order_id },
     });

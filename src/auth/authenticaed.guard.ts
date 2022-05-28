@@ -29,7 +29,7 @@ export class AuthenticatedGuard implements CanActivate {
     if (request.user.user_id === params_user_id) {
       return true;
     } else {
-      if (!params_user_id) return request.isAuthenticated();
+      if (params_user_id !== NaN) return request.isAuthenticated();
       throw new UnauthorizedException('登入者與請求者不同，拒絕此請求');
     }
   }
