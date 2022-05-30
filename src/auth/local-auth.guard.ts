@@ -1,4 +1,9 @@
-import { ExecutionContext, HttpException, Injectable } from '@nestjs/common';
+import {
+  ExecutionContext,
+  HttpException,
+  HttpStatus,
+  Injectable,
+} from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
 
 @Injectable()
@@ -14,7 +19,7 @@ export class LocalAuthGuard extends AuthGuard('local') {
     // 如果不存在或不正確則拋出錯誤
     requestKeys.forEach((item) => {
       if (!correctKeys.includes(item)) {
-        throw new HttpException('錯誤的POST body', 401);
+        throw new HttpException('錯誤的POST body', HttpStatus.BAD_REQUEST);
       }
     });
     const result = (await super.canActivate(context)) as boolean;

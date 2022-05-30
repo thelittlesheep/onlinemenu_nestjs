@@ -1,4 +1,4 @@
-import { HttpException, Injectable } from '@nestjs/common';
+import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { Repository } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
 import { user } from './user.entity';
@@ -32,7 +32,7 @@ export class UserService {
     const dbuser = await this.findUser(data.user_account);
 
     if (dbuser) {
-      throw new HttpException('帳號已存在', 409);
+      throw new HttpException('帳號已存在', HttpStatus.CONFLICT);
     }
 
     const user_id = (await this.user_Respository.save(varuser)).user_id;
@@ -72,7 +72,7 @@ export class UserService {
         message: `成功更新使用者資訊`,
       };
     } else {
-      throw new HttpException('資料未變動', 200);
+      throw new HttpException('資料未變動', HttpStatus.OK);
     }
   }
 
@@ -84,7 +84,7 @@ export class UserService {
     if (user) {
       return user.orders;
     }
-    throw new HttpException('查無此使用者', 404);
+    throw new HttpException('查無此使用者', HttpStatus.NOT_FOUND);
   }
 
   async getUserInfoandOrders(user_id: number) {
@@ -116,7 +116,7 @@ export class UserService {
 
       return newuser;
     }
-    throw new HttpException('查無此使用者', 404);
+    throw new HttpException('查無此使用者', HttpStatus.NOT_FOUND);
   }
 
   async getuserbyQueryBuilder() {

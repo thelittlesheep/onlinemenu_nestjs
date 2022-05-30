@@ -1,5 +1,10 @@
 import { PassportStrategy } from '@nestjs/passport';
-import { Injectable, UnauthorizedException } from '@nestjs/common';
+import {
+  HttpException,
+  HttpStatus,
+  Injectable,
+  UnauthorizedException,
+} from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { Strategy } from 'passport-local';
 
@@ -18,7 +23,8 @@ export class LoaclStrategy extends PassportStrategy(Strategy) {
     );
 
     if (!user) {
-      throw new UnauthorizedException();
+      // throw new UnauthorizedException();
+      throw new HttpException('登入之使用者不存在', HttpStatus.UNAUTHORIZED);
     }
     return user;
   }

@@ -2,6 +2,7 @@ import {
   CanActivate,
   ExecutionContext,
   HttpException,
+  HttpStatus,
   Injectable,
   UnauthorizedException,
 } from '@nestjs/common';
@@ -21,16 +22,21 @@ export class AuthenticatedGuard implements CanActivate {
     );
     if (allowAny) return true;
     if (request.user === undefined) {
-      if (request.url === '/user/logout') {
-        throw new HttpException('Already Logout Or Not Login yet', 401);
-      }
-      throw new UnauthorizedException('Already Logout Or Not Login yet');
+      // if (request.url === '/user/logout') {
+      //   throw new HttpException('Already Logout Or Not Login yet', 401);
+      // }
+      // throw new UnauthorizedException('已經登出或尚未登入!');
+      throw new HttpException('已經登出或尚未登入!', HttpStatus.UNAUTHORIZED);
     }
     if (request.user.user_id === params_user_id) {
       return true;
     } else {
       if (params_user_id !== NaN) return request.isAuthenticated();
-      throw new UnauthorizedException('登入者與請求者不同，拒絕此請求');
+      // throw new UnauthorizedException('登入者與請求者不同，拒絕此請求');
+      throw new HttpException(
+        '登入者與請求者不同，拒絕此請求',
+        HttpStatus.UNAUTHORIZED,
+      );
     }
   }
 }

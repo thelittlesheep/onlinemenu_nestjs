@@ -1,4 +1,4 @@
-import { HttpException, Injectable } from '@nestjs/common';
+import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { UserService } from '../users/user.service';
 import { user } from '../users/user.entity';
@@ -21,7 +21,7 @@ export class AuthService {
       return rest;
     }
 
-    throw new HttpException('錯誤的帳號或密碼', 403);
+    throw new HttpException('錯誤的帳號或密碼', HttpStatus.FORBIDDEN);
   }
 
   async login(user: user) {

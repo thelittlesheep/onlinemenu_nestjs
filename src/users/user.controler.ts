@@ -19,6 +19,7 @@ import {
   ApiOperation,
   ApiResponse,
   ApiTags,
+  ApiUnauthorizedResponse,
 } from '@nestjs/swagger';
 import { UserService } from './user.service';
 import { Response } from 'express';
@@ -33,6 +34,7 @@ import {
   usersorders_DELETE_Apiparam_Schema,
 } from './user.ApiParam.Schema';
 import userInfoDTO from './DTO/userInfo.DTO';
+import { ResponseError } from '../share/responseError.interface';
 
 @ApiTags('user')
 @Controller()
@@ -52,8 +54,9 @@ export class usercontroller {
   })
   login(@Request() req) {
     // return this.authService.login(req.user);
-
-    return { message: 'login success' };
+    // request內之user是由LocalAuthGuard->LoaclStrategy->authService.validateUser
+    // 回傳的user，若要抓取user_id，可以使用req.user.user_id
+    return { message: 'login success', user_id: req.user };
   }
   // 使用者登出
   @Post('logout')
@@ -79,8 +82,12 @@ export class usercontroller {
   }
 
   @Get()
-  @ApiResponse({ type: userInfoDTO })
-  @ApiOkResponse({ description: '成功取得使用者基本資料' })
+  // @ApiResponse({ type: userInfoDTO })
+  @ApiOkResponse({ description: '成功取得使用者基本資料', type: userInfoDTO })
+  @ApiUnauthorizedResponse({
+    description: '使用者未登入',
+    type: ResponseError,
+  })
   @ApiOperation({
     summary: '查詢使用者',
     description: '查詢使用者',

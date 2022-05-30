@@ -1,4 +1,9 @@
-import { HttpException, Injectable, NotFoundException } from '@nestjs/common';
+import {
+  HttpException,
+  HttpStatus,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import { InjectConnection, InjectRepository } from '@nestjs/typeorm';
 import { order } from 'menu/entity/order.entity';
 import { order_product } from 'menu/entity/order_product.entity';
@@ -60,14 +65,14 @@ export class OrderService {
           await queryRunner.commitTransaction();
         } catch (e) {
           console.log(e);
-          throw new HttpException(e, 500);
+          throw new HttpException(e, HttpStatus.INTERNAL_SERVER_ERROR);
         } finally {
           await queryRunner.release();
         }
       });
     } catch (e) {
       console.log(e);
-      throw new HttpException(e, 500);
+      throw new HttpException(e, HttpStatus.INTERNAL_SERVER_ERROR);
     } finally {
       await queryRunner.release();
     }
@@ -117,7 +122,11 @@ export class OrderService {
       });
     } else {
       // neworder = '訂單編號：' + order_id + ' 不存在';
-      throw new NotFoundException('訂單編號：' + order_id + ' 不存在');
+      // throw new NotFoundException('訂單編號：' + order_id + ' 不存在');
+      throw new HttpException(
+        '訂單編號：' + order_id + ' 不存在',
+        HttpStatus.NOT_FOUND,
+      );
     }
 
     return neworder;
@@ -130,7 +139,7 @@ export class OrderService {
 
     if (res) {
       if (moment(res.order_pickupdate) < moment()) {
-        throw new HttpException('order can not be deleted', 409);
+        throw new HttpException('訂單不可被刪除', HttpStatus.CONFLICT);
       } else {
         if (res) {
           await this.order_Respository.delete({
@@ -139,12 +148,16 @@ export class OrderService {
           });
           return {
             status: 200,
-            message: 'Order has been deleted successfully',
+            message: '訂單已成功刪除',
           };
         }
       }
     }
 
-    throw new NotFoundException('訂單編號：' + order_id + ' 不存在');
+    // throw new NotFoundException('訂單編號：' + order_id + ' 不存在');
+    throw new HttpException(
+      '訂單編號：' + order_id + ' 不存在',
+      HttpStatus.NOT_FOUND,
+    );
   }
 }
