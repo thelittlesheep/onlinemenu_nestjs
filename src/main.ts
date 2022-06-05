@@ -54,8 +54,8 @@ async function bootstrap() {
   app.use(passport.session());
   // section of swagger
   const config = new DocumentBuilder()
-    .setTitle('Api')
-    .setDescription('Api')
+    .setTitle('OnlineMenu openAPI')
+    .setDescription('OnlineMenu openAPI')
     .setVersion('1.0')
     .addServer('http://localhost:3000')
     .build();
