@@ -28,7 +28,7 @@
 
 請參考  
 [API_DESIGN.md](https://github.com/thelittlesheep/onlinemenu_nestjs/blob/master/API_DESIGN.md)  
-[OnlineMenu openAPI](https://backend.lshuang.tw)
+[OnlineMenu openAPI](https://backend.lshuang.tw/api)
 
 ## License
 
