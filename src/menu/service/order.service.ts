@@ -9,7 +9,7 @@ import { order } from 'menu/entity/order.entity';
 import { order_product } from 'menu/entity/order_product.entity';
 import { order_product_adjustitem } from 'menu/entity/order_product_adjustitem.entity';
 import { Connection, Repository } from 'typeorm';
-import { orderDTO } from '../DTO/orderDTO';
+import { orderDTO } from '../DTO/order.DTO';
 import * as moment from 'moment';
 
 @Injectable()
@@ -27,7 +27,7 @@ export class OrderService {
   //   });
   // }
 
-  async addOrder(data: orderDTO) {
+  async createOrder(data: orderDTO) {
     const varorder = new order();
     varorder.user_id = data.user_id;
     varorder.order_quantity = data.order_quantity;
@@ -137,7 +137,7 @@ export class OrderService {
       where: { user_id: user_id, order_id: order_id },
     });
 
-    if (res) {
+    if (res !== undefined) {
       if (moment(res.order_pickupdate) < moment()) {
         throw new HttpException('訂單不可被刪除', HttpStatus.CONFLICT);
       } else {

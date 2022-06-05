@@ -12,11 +12,11 @@ export default class userLoginDTO {
   user_account: string;
 
   @Matches(/^\w{6,24}$/, {
-    message: 'user_password 密碼是6-24個字元',
+    message: 'user_password 密碼是6-24個字元。',
   })
   @ApiProperty({
     example: 'password',
-    description: '使用者密碼，必須為6-24個字元',
+    description: '使用者密碼，必須為6-24個字元。',
   })
   user_password: string;
 }

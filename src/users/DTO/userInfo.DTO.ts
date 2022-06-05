@@ -22,7 +22,10 @@ export default class userInfoDTO {
   user_email?: string;
 
   @IsOptional()
-  @IsNumberString()
+  @IsNumberString(
+    { allowInfinity: false, allowNaN: false, maxDecimalPlaces: 0 },
+    { message: '請輸入數字' },
+  )
   @ApiPropertyOptional({ example: '0912345678', description: '使用者連絡電話' })
   user_phone?: string;
 

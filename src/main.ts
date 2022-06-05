@@ -21,7 +21,7 @@ async function bootstrap() {
     origin: [
       'http://0.0.0.0:3001',
       'http://localhost:3001',
-      'http://localhost:3002',
+      'http://192.168.0.197:3001',
       'http://localhost:4173',
       'https://lshuang.tw',
     ],
@@ -41,7 +41,9 @@ async function bootstrap() {
       cookie: {
         // 設定 session cookie 的 domain 屬性。
         domain:
-          process.env.NODE_ENV === 'production' ? 'lshuang.tw' : 'localhost',
+          process.env.NODE_ENV === 'production'
+            ? 'lshuang.tw'
+            : '192.168.0.197',
         maxAge: 3600000,
         httpOnly: false,
       },

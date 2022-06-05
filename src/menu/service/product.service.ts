@@ -1,12 +1,11 @@
-import { Injectable } from '@nestjs/common';
+import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { allentitytype } from '../entity';
 import { product } from '../entity/product.entity';
 import { MenuService } from '../menu.service';
 import { Repository } from 'typeorm';
 import { category } from 'menu/entity/category.entity';
-import { adjustitem } from 'menu/entity/adjustitem.entity';
 import { adjusttype } from 'menu/entity/adjusttype.entity';
+import { createproductDTO, updateproductDTO } from 'menu/DTO/product.DTO';
 
 @Injectable()
 export class ProductService {
@@ -19,22 +18,19 @@ export class ProductService {
     private adjusttype_Respository: Repository<adjusttype>,
   ) {}
 
-  async getproductbyid(productid: string) {
-    const getproductbyid = new getproductby(
-      productid,
-      { product_id: productid as unknown as number },
-      this.product_Respository,
-    ).getproduct();
-    return getproductbyid;
+  async getProductbyId(product_id: number) {
+    const product = await this.product_Respository.findOne({
+      where: { product_id: product_id },
+      relations: ['categoryid'],
+    });
+    if (product === undefined)
+      throw new HttpException(`商品 product_id = ${product_id} 不存在`, 404);
+    return product;
   }
 
-  async getproductbyname(productname: string) {
-    const getproductbyid = new getproductby(
-      productname,
-      { product_name: productname },
-      this.product_Respository,
-    ).getproduct();
-    return getproductbyid;
+  async createProduct(product: createproductDTO) {
+    const res = await this.product_Respository.save(product);
+    return res;
   }
 
   async getproductDetail(productid) {
@@ -76,6 +72,53 @@ export class ProductService {
     // .getMany()
 
     return res;
+  }
+
+  async updateProduct(product_id: number, newproduct: updateproductDTO) {
+    const dbProduct = await this.product_Respository.findOne({
+      where: { product_id: product_id },
+    });
+    const updateItems = [];
+    const updateProduct = new updateproductDTO();
+    Object.keys(dbProduct).forEach((i) => {
+      if (Object.keys(newproduct).includes(i)) {
+        updateProduct[i] = newproduct[i];
+        updateItems.push(i);
+      } else {
+        updateProduct[i] = dbProduct[i];
+      }
+    });
+    // 確認傳入之資料與資料庫中的資料是否相同，若相同則不更新\
+    const isUpdateisSame =
+      updateItems.filter((i) => dbProduct[i] !== updateProduct[i]).length === 0
+        ? true
+        : false;
+    if (isUpdateisSame === false) {
+      await this.product_Respository.update(product_id, updateProduct);
+      return {
+        statusCode: 200,
+        message: `成功更新商品資訊`,
+      };
+    } else {
+      throw new HttpException('資料未變動', HttpStatus.OK);
+    }
+  }
+
+  async deleteProduct(product_id: number) {
+    const res = await this.product_Respository.findOne({
+      where: { product_id: product_id },
+    });
+    if (res !== undefined) {
+      await this.product_Respository.delete({
+        product_id: product_id,
+      });
+      return {
+        status: 200,
+        message: '訂單已成功刪除',
+      };
+    } else {
+      throw new HttpException('該商品不存在', HttpStatus.NOT_FOUND);
+    }
   }
 }
 

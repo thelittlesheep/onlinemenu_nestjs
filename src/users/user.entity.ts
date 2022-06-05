@@ -25,10 +25,12 @@ export class user {
   @Column({ default: 0 })
   user_age?: number;
 
+  @Column({ type: 'varchar', length: 20, default: 'customer' })
+  user_role?: string;
+
   // Foreign Key
   // @Column({ name: 'order_id', type: 'int', select: false, nullable: true })
   // order_id?: number;
-
   @OneToMany(() => order, (order) => order.userid, { nullable: false })
   orders?: order[];
 }

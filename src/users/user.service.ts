@@ -1,22 +1,52 @@
-import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
+import {
+  CACHE_MANAGER,
+  HttpException,
+  HttpStatus,
+  Inject,
+  Injectable,
+} from '@nestjs/common';
 import { Repository } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
 import { user } from './user.entity';
 import { userDTO } from './DTO/user.DTO';
 import { OrderService } from 'menu/service/order.service';
-import { IuserResponseDto } from './userResponse.DTO';
+import { IuserResponseDto } from './DTO/userResponse.DTO';
 import userInfoDTO from './DTO/userInfo.DTO';
+import { Session, Store } from 'express-session';
+import { RedisClient } from 'redis';
+import { Request } from 'express';
+import { iRequest, ISession } from 'custom';
+
+interface RedisCache extends Cache {
+  store: RedisStore;
+}
+interface RedisStore extends Store {
+  name: 'redis';
+  getClient: () => RedisClient;
+  isCacheableValue: (value: any) => boolean;
+}
 
 @Injectable()
 export class UserService {
+  private redisClient: RedisClient;
   constructor(
     @InjectRepository(user, 'onlinemenu')
     private user_Respository: Repository<user>,
     private order_Service: OrderService,
-  ) {}
+    @Inject(CACHE_MANAGER)
+    private cacheManager: RedisCache,
+  ) {
+    this.redisClient = this.cacheManager.store.getClient();
+  }
   async findUser(user_account: string) {
     return this.user_Respository.findOne({
       where: { user_account: user_account },
+    });
+  }
+
+  async findUserByID(user_id: number) {
+    return this.user_Respository.findOne({
+      where: { user_id: user_id },
     });
   }
 
@@ -45,8 +75,16 @@ export class UserService {
 
     return { statusCode: 201, message: '成功建立帳號' };
   }
+  async getAllUser() {
+    const user = await this.user_Respository.find();
+    return user;
+  }
 
-  async updateUser(user_id: number, newUser: userInfoDTO) {
+  async updateUser(
+    user_id: number,
+    newUser: userInfoDTO,
+    session: ISession<userInfoDTO>,
+  ) {
     const dbUser = await this.user_Respository.findOne({
       where: { user_id: user_id },
     });
@@ -66,7 +104,15 @@ export class UserService {
         ? true
         : false;
     if (isUpdateisSame === false) {
-      await this.user_Respository.update(user_id, updateUser);
+      const res = await this.user_Respository.update(user_id, updateUser);
+      // 若資料庫更新成功，則一併更新session
+      if (res.affected !== 0) {
+        const { user_account, user_password, ...rest } =
+          await this.findUserByID(user_id);
+        // session Object中包含 {cookie:{}, passport:{user:{}} }
+        session.passport.user = rest;
+      }
+
       return {
         statusCode: 200,
         message: `成功更新使用者資訊`,
@@ -129,4 +175,14 @@ export class UserService {
 
     return user;
   }
+
+  // async getCacheUser(req: iRequest, session: ISession<userInfoDTO>) {
+  //   console.log(req.session);
+  //   console.log(session.passport);
+  //   // 從reddis中利用session key取得使用者資訊
+  //   this.redisClient.get('sess:' + session.id, (err, res) => {
+  //     console.log(err, JSON.parse(res));
+  //   });
+  //   return session.passport;
+  // }
 }

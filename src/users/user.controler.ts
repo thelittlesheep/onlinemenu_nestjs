@@ -1,22 +1,29 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import {
   Body,
+  CacheInterceptor,
   Controller,
   Delete,
   Get,
   HttpCode,
+  HttpException,
   HttpStatus,
   Param,
   Post,
   Put,
+  Req,
   Request,
   Res,
+  Session,
+  UseFilters,
   UseGuards,
+  UseInterceptors,
 } from '@nestjs/common';
 import {
   ApiBody,
   ApiOkResponse,
   ApiOperation,
+  ApiParam,
   ApiResponse,
   ApiTags,
   ApiUnauthorizedResponse,
@@ -27,7 +34,7 @@ import { userDTO } from './DTO/user.DTO';
 import { AllowAny } from 'auth/authenticaed.decorator';
 import { LocalAuthGuard } from 'auth/local-auth.guard';
 import { OrderService } from 'menu/service/order.service';
-import { orderDTO } from 'menu/DTO/orderDTO';
+import { orderDTO } from 'menu/DTO/order.DTO';
 import userLoginDTO from './DTO/userLogin.DTO';
 import {
   usersorders_READ_Apiparam_Schema,
@@ -35,6 +42,12 @@ import {
 } from './user.ApiParam.Schema';
 import userInfoDTO from './DTO/userInfo.DTO';
 import { ResponseError } from '../share/responseError.interface';
+import { ISession } from 'custom';
+import { AbilityFactory, Action } from 'ability/ability.factory';
+import { user } from './user.entity';
+import { CheckAbilities } from 'ability/ability.decorator';
+import { AbilityGuard } from 'ability/ability.guard';
+import { BadRequestExceptionFilter } from 'share/badRequest.filter';
 
 @ApiTags('user')
 @Controller()
@@ -42,24 +55,27 @@ export class usercontroller {
   constructor(
     protected user_Service: UserService,
     protected order_Service: OrderService,
+    private abilityFactory: AbilityFactory,
   ) {}
+
   // 使用者登入
   @UseGuards(LocalAuthGuard)
-  @Post('login')
+  @Post('/login')
   @AllowAny()
   @ApiBody({ type: userLoginDTO })
   @ApiOperation({
     summary: '使用者登入',
     description: '使用者登入',
   })
-  login(@Request() req) {
+  login(@Request() req, @Body() user: userLoginDTO) {
     // return this.authService.login(req.user);
     // request內之user是由LocalAuthGuard->LoaclStrategy->authService.validateUser
     // 回傳的user，若要抓取user_id，可以使用req.user.user_id
-    return { message: 'login success', user_id: req.user };
+    return { message: 'login success', user_id: req.user.user_id };
   }
+
   // 使用者登出
-  @Post('logout')
+  @Post('/logout')
   @ApiOperation({
     summary: '使用者登出',
     description: '使用者登出',
@@ -69,20 +85,44 @@ export class usercontroller {
     req.session.destroy();
     return { message: 'logout success' };
   }
+
+  // 取得所有使用者，僅管理員有權限使用
+  @Get('/')
+  @UseGuards(AbilityGuard)
+  @CheckAbilities({ action: Action.Read, subject: 'users' })
+  @ApiOperation({
+    summary: '取得所有使用者資訊，僅管理員有權限使用',
+    description: '取得所有使用者資訊，僅管理員有權限使用',
+  })
+  getAllUser(@Request() req) {
+    return this.user_Service.getAllUser();
+  }
+
+  @Get('UserInfoandOrders')
+  @ApiOperation({
+    summary: '取得使用者資料及其訂單',
+    description: '取得使用者資料及其訂單',
+  })
+  getUserInfoandOrders(@Request() req) {
+    return this.user_Service.getUserInfoandOrders(req.user.user_id);
+  }
+
   // 新增使用者
-  @Post()
+  @Post('/')
   @AllowAny()
   @ApiBody({ type: userDTO })
   @ApiOperation({
     summary: '新增使用者',
     description: '新增使用者',
   })
-  createuser(@Body() user: userDTO) {
+  createUser(@Body() user: userDTO) {
     return this.user_Service.createUser(user);
   }
 
-  @Get()
-  // @ApiResponse({ type: userInfoDTO })
+  @Get('/:user_id')
+  @ApiParam({
+    name: 'user_id',
+  })
   @ApiOkResponse({ description: '成功取得使用者基本資料', type: userInfoDTO })
   @ApiUnauthorizedResponse({
     description: '使用者未登入',
@@ -92,24 +132,27 @@ export class usercontroller {
     summary: '查詢使用者',
     description: '查詢使用者',
   })
-  getuser(@Request() req, @Res({ passthrough: true }) res: Response) {
+  // @UseInterceptors(HttpCacheInterceptor)
+  // @UseInterceptors(CacheInterceptor)
+  getUser(@Request() req, @Res({ passthrough: true }) res: Response) {
     res.status(HttpStatus.OK);
+    // 返回redis中的使用者資料
     return req.user;
   }
 
   @Put('/:user_id')
+  @UseFilters(new BadRequestExceptionFilter())
   @ApiBody({ type: userInfoDTO })
   @ApiOperation({
     summary: '修改使用者',
     description: '修改使用者',
   })
-  updateuser(@Param() queryParams: { user_id }, @Body() user: userInfoDTO) {
-    return this.user_Service.updateUser(queryParams.user_id, user);
-  }
-
-  @Get('/userInfoAndOrders/')
-  getUserOrders(@Request() req) {
-    return this.user_Service.getUserInfoandOrders(req.user.user_id);
+  updateUser(
+    @Param() queryParams: { user_id },
+    @Body() user: userInfoDTO,
+    @Session() session: ISession,
+  ) {
+    return this.user_Service.updateUser(queryParams.user_id, user, session);
   }
 }
 
@@ -128,7 +171,7 @@ export class userOrdercontroller {
     summary: '查詢使用者所有的訂單',
     description: '查詢使用者所有的訂單',
   })
-  getOrders(@Param() queryParams: { user_id }) {
+  getOrders(@Req() req, @Param() queryParams: { user_id }) {
     return this.user_Service.getOrders(queryParams.user_id);
   }
 
@@ -139,7 +182,7 @@ export class userOrdercontroller {
   })
   @ApiBody({ type: orderDTO })
   createOrder(@Body() orders: orderDTO) {
-    return this.order_Service.addOrder(orders);
+    return this.order_Service.createOrder(orders);
   }
 
   @Get('/:user_id/orders/:order_id')
