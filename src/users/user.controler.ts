@@ -1,12 +1,9 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import {
   Body,
-  CacheInterceptor,
   Controller,
   Delete,
   Get,
-  HttpCode,
-  HttpException,
   HttpStatus,
   Param,
   Post,
@@ -17,14 +14,12 @@ import {
   Session,
   UseFilters,
   UseGuards,
-  UseInterceptors,
 } from '@nestjs/common';
 import {
   ApiBody,
   ApiOkResponse,
   ApiOperation,
   ApiParam,
-  ApiResponse,
   ApiTags,
   ApiUnauthorizedResponse,
 } from '@nestjs/swagger';
@@ -48,6 +43,7 @@ import { user } from './user.entity';
 import { CheckAbilities } from 'ability/ability.decorator';
 import { AbilityGuard } from 'ability/ability.guard';
 import { BadRequestExceptionFilter } from 'share/badRequest.filter';
+import { HttpExceptionFilter } from 'share/responseError.filter';
 
 @ApiTags('user')
 @Controller()

@@ -26,7 +26,7 @@ export class AuthenticatedGuard implements CanActivate {
       //   throw new HttpException('Already Logout Or Not Login yet', 401);
       // }
       // throw new UnauthorizedException('已經登出或尚未登入!');
-      throw new HttpException('已經登出或尚未登入!', HttpStatus.UNAUTHORIZED);
+      throw new HttpException('已經登出或尚未登入!', HttpStatus.CONFLICT);
     }
     if (request.user.user_id === params_user_id) {
       return true;
