@@ -42,9 +42,7 @@ async function bootstrap() {
       cookie: {
         // 設定 session cookie 的 domain 屬性。
         domain:
-          process.env.NODE_ENV === 'production'
-            ? 'lshuang.tw'
-            : '192.168.0.197',
+          process.env.NODE_ENV === 'production' ? '.lshuang.tw' : 'localhost',
         maxAge: 3600000,
         httpOnly: false,
       },
