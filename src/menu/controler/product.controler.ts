@@ -9,14 +9,13 @@ import {
   UseGuards,
 } from '@nestjs/common';
 import { ProductService } from '../service/product.service';
-import { AllowAny } from 'auth/authenticaed.decorator';
+import { AllowAny } from '@/auth/authenticaed.decorator';
 import { ApiBody, ApiOperation, ApiParam, ApiTags } from '@nestjs/swagger';
-import { createproductDTO, updateproductDTO } from 'menu/DTO/product.DTO';
-import { CheckAbilities } from 'ability/ability.decorator';
-import { AbilityGuard } from 'ability/ability.guard';
-import { Action } from 'ability/ability.factory';
-import { user } from 'users/user.entity';
-import { product } from 'menu/entity/product.entity';
+import { createproductDTO, updateproductDTO } from '@/menu/DTO/product.DTO';
+import { CheckAbilities } from '@/ability/ability.decorator';
+import { AbilityGuard } from '@/ability/ability.guard';
+import { Action } from '@/ability/ability.factory';
+import { product } from '@/menu/entity/product.entity';
 
 @ApiTags('product')
 @Controller('products')

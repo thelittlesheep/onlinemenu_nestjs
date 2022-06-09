@@ -9,13 +9,12 @@ import { Repository } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
 import { user } from './user.entity';
 import { userDTO } from './DTO/user.DTO';
-import { OrderService } from 'menu/service/order.service';
+import { OrderService } from '@/menu/service/order.service';
 import { IuserResponseDto } from './DTO/userResponse.DTO';
 import userInfoDTO from './DTO/userInfo.DTO';
-import { Session, Store } from 'express-session';
+import { Store } from 'express-session';
 import { RedisClient } from 'redis';
-import { Request } from 'express';
-import { iRequest, ISession } from 'custom';
+import { ISession } from '@/custom.interface';
 
 interface RedisCache extends Cache {
   store: RedisStore;

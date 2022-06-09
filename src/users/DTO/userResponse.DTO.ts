@@ -1,5 +1,5 @@
-import { order } from 'menu/entity/order.entity';
-import { order_product_adjustitem } from 'menu/entity/order_product_adjustitem.entity';
+import { order } from '@/menu/entity/order.entity';
+import { order_product_adjustitem } from '@/menu/entity/order_product_adjustitem.entity';
 
 export interface IuserResponseDto {
   user_id?: number;

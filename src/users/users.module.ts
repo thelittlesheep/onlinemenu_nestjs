@@ -1,17 +1,17 @@
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 
-import { usercontroller, userOrdercontroller } from './user.controler';
+import { UserController, UserOrderController } from './user.controller';
 import { user } from './user.entity';
 import { UserService } from './user.service';
-import { MenuModule } from 'menu/menu.module';
+import { MenuModule } from '@/menu/menu.module';
 import type { ClientOpts } from 'redis';
 import * as redisStore from 'cache-manager-redis-store';
 import { CacheModule } from '@nestjs/common';
-import { AbilityModule } from 'ability/ability.module';
+import { AbilityModule } from '@/ability/ability.module';
 
 @Module({
-  controllers: [usercontroller, userOrdercontroller],
+  controllers: [UserController, UserOrderController],
   imports: [
     TypeOrmModule.forFeature([user], 'onlinemenu'),
     MenuModule,

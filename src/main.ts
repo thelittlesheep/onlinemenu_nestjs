@@ -8,7 +8,7 @@ import * as session from 'express-session';
 import * as passport from 'passport';
 import * as connectRedis from 'connect-redis';
 import { createClient } from 'redis';
-import { HttpExceptionFilter } from 'share/responseError.filter';
+import { HttpExceptionFilter } from '@/share/responseError.filter';
 
 declare const module: any;
 // redis@v3

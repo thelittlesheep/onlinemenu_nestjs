@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
 import {
   Body,
   Controller,
@@ -26,10 +25,10 @@ import {
 import { UserService } from './user.service';
 import { Response } from 'express';
 import { userDTO } from './DTO/user.DTO';
-import { AllowAny } from 'auth/authenticaed.decorator';
-import { LocalAuthGuard } from 'auth/local-auth.guard';
-import { OrderService } from 'menu/service/order.service';
-import { orderDTO } from 'menu/DTO/order.DTO';
+import { AllowAny } from '@/auth/authenticaed.decorator';
+import { LocalAuthGuard } from '@/auth/local-auth.guard';
+import { OrderService } from '@/menu/service/order.service';
+import { orderDTO } from '@/menu/DTO/order.DTO';
 import userLoginDTO from './DTO/userLogin.DTO';
 import {
   usersorders_READ_Apiparam_Schema,
@@ -37,17 +36,15 @@ import {
 } from './user.ApiParam.Schema';
 import userInfoDTO from './DTO/userInfo.DTO';
 import { ResponseError } from '../share/responseError.interface';
-import { ISession } from 'custom';
-import { AbilityFactory, Action } from 'ability/ability.factory';
-import { user } from './user.entity';
-import { CheckAbilities } from 'ability/ability.decorator';
-import { AbilityGuard } from 'ability/ability.guard';
-import { BadRequestExceptionFilter } from 'share/badRequest.filter';
-import { HttpExceptionFilter } from 'share/responseError.filter';
+import { ISession } from '@/custom.interface';
+import { AbilityFactory, Action } from '@/ability/ability.factory';
+import { CheckAbilities } from '@/ability/ability.decorator';
+import { AbilityGuard } from '@/ability/ability.guard';
+import { BadRequestExceptionFilter } from '@/share/badRequest.filter';
 
 @ApiTags('user')
 @Controller()
-export class usercontroller {
+export class UserController {
   constructor(
     protected user_Service: UserService,
     protected order_Service: OrderService,
@@ -154,7 +151,7 @@ export class usercontroller {
 
 @ApiTags('user Order')
 @Controller()
-export class userOrdercontroller {
+export class UserOrderController {
   constructor(
     protected user_Service: UserService,
     protected order_Service: OrderService,

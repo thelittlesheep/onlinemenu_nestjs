@@ -6,7 +6,7 @@ import { MenuService } from './menu.service';
 import { menuEntities } from './entity';
 import { menuSerivces } from './service';
 import { menuController } from './controler';
-import { AbilityModule } from 'ability/ability.module';
+import { AbilityModule } from '@/ability/ability.module';
 
 @Module({
   controllers: [MenuController, ...menuController],

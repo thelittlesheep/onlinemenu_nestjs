@@ -2,14 +2,9 @@ import {
   Column,
   Entity,
   PrimaryGeneratedColumn,
-  ManyToMany,
-  ManyToOne,
   JoinColumn,
-  JoinTable,
   OneToMany,
 } from 'typeorm';
-import { adjusttype } from './adjusttype.entity';
-import { category } from './category.entity';
 import { order_product_adjustitem } from './order_product_adjustitem.entity';
 
 @Entity({ name: 'Adjustitem' })
