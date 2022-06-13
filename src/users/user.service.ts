@@ -9,8 +9,6 @@ import { Repository } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
 import { user } from './user.entity';
 import { userDTO } from './DTO/user.DTO';
-import { OrderService } from '@/menu/service/order.service';
-import { IuserResponseDto } from './DTO/userResponse.DTO';
 import userInfoDTO from './DTO/userInfo.DTO';
 import { Store } from 'express-session';
 import { RedisClient } from 'redis';
@@ -31,13 +29,13 @@ export class UserService {
   constructor(
     @InjectRepository(user, 'onlinemenu')
     private user_Respository: Repository<user>,
-    private order_Service: OrderService,
     @Inject(CACHE_MANAGER)
     private cacheManager: RedisCache,
   ) {
     this.redisClient = this.cacheManager.store.getClient();
   }
-  async findUser(user_account: string) {
+
+  async findUserByAccount(user_account: string) {
     return this.user_Respository.findOne({
       where: { user_account: user_account },
     });
@@ -49,6 +47,11 @@ export class UserService {
     });
   }
 
+  async getAllUser() {
+    const user = await this.user_Respository.find();
+    return user;
+  }
+
   async createUser(data: userDTO) {
     const varuser = new user();
     varuser.user_account = data.user_account;
@@ -58,7 +61,7 @@ export class UserService {
     varuser.user_phone = data.user_phone;
     varuser.user_age = data.user_age;
 
-    const dbuser = await this.findUser(data.user_account);
+    const dbuser = await this.findUserByAccount(data.user_account);
 
     if (dbuser) {
       throw new HttpException('帳號已存在', HttpStatus.CONFLICT);
@@ -73,10 +76,6 @@ export class UserService {
     }
 
     return { statusCode: 201, message: '成功建立帳號' };
-  }
-  async getAllUser() {
-    const user = await this.user_Respository.find();
-    return user;
   }
 
   async updateUser(
@@ -106,6 +105,7 @@ export class UserService {
       const res = await this.user_Respository.update(user_id, updateUser);
       // 若資料庫更新成功，則一併更新session
       if (res.affected !== 0) {
+        // eslint-disable-next-line @typescript-eslint/no-unused-vars
         const { user_account, user_password, ...rest } =
           await this.findUserByID(user_id);
         // session Object中包含 {cookie:{}, passport:{user:{}} }
@@ -121,59 +121,27 @@ export class UserService {
     }
   }
 
-  async getOrders(user_id: number) {
-    const user = await this.user_Respository.findOne({
-      where: { user_id: user_id },
-      relations: ['orders'],
-    });
-    if (user) {
-      return user.orders;
-    }
-    throw new HttpException('查無此使用者', HttpStatus.NOT_FOUND);
-  }
+  // async getUserOrders(user_id: number) {
+  //   const user = await this.user_Respository.findOne({
+  //     where: { user_id: user_id },
+  //     relations: ['orders'],
+  //   });
+  //   if (user) {
+  //     return user.orders;
+  //   }
+  //   throw new HttpException('查無此使用者', HttpStatus.NOT_FOUND);
+  // }
 
-  async getUserInfoandOrders(user_id: number) {
-    let newuser: IuserResponseDto = {};
+  // async getuserbyQueryBuilder() {
+  //   const user = await this.user_Respository
+  //     .createQueryBuilder('user')
+  //     .leftJoinAndSelect('user.orders', 'orders')
+  //     .leftJoinAndSelect('orders.products', 'products')
+  //     .select(['user', 'orders', 'products'])
+  //     .getOne();
 
-    const user = await this.user_Respository.findOne({
-      join: {
-        alias: 'user',
-        leftJoinAndSelect: {
-          order: 'user.orders',
-          order_products: 'order.order_products',
-          product: 'order_products.product',
-        },
-      },
-      where: { user_id: user_id },
-    });
-    if (user) {
-      newuser = { orders: user.orders };
-
-      await Promise.all(
-        newuser.orders.map(async (order) => {
-          delete order.user_id;
-          order.order_products = await this.order_Service.getOrder(
-            user.user_id,
-            order.order_id,
-          );
-        }),
-      );
-
-      return newuser;
-    }
-    throw new HttpException('查無此使用者', HttpStatus.NOT_FOUND);
-  }
-
-  async getuserbyQueryBuilder() {
-    const user = await this.user_Respository
-      .createQueryBuilder('user')
-      .leftJoinAndSelect('user.orders', 'orders')
-      .leftJoinAndSelect('orders.products', 'products')
-      .select(['user', 'orders', 'products'])
-      .getOne();
-
-    return user;
-  }
+  //   return user;
+  // }
 
   // async getCacheUser(req: iRequest, session: ISession<userInfoDTO>) {
   //   console.log(req.session);

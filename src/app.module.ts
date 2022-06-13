@@ -27,8 +27,8 @@ const routes: Routes = [
   imports: [
     RouterModule.forRoutes(routes),
     TypeOrmModule.forRoot(onlinemenuConfig),
-    MenuModule,
     UsersModule,
+    MenuModule,
     AuthModule,
     ConfigModule.forRoot({
       envFilePath: '.env',

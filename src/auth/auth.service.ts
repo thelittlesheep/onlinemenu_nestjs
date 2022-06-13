@@ -14,7 +14,7 @@ export class AuthService {
     user_account: string,
     user_password: string,
   ): Promise<any> {
-    const user = await this.userService.findUser(user_account);
+    const user = await this.userService.findUserByAccount(user_account);
     if (user && user.user_password === user_password) {
       // eslint-disable-next-line @typescript-eslint/no-unused-vars
       const { user_account, user_password, ...rest } = user;

@@ -1,4 +1,4 @@
-import { Module } from '@nestjs/common';
+import { forwardRef, Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { MenuController } from './menu.controller';
 import { MenuService } from './menu.service';
@@ -7,6 +7,8 @@ import { menuEntities } from './entity';
 import { menuSerivces } from './service';
 import { menuController } from './controler';
 import { AbilityModule } from '@/ability/ability.module';
+import { UsersModule } from '@/users/users.module';
+import { user } from '@/users/user.entity';
 
 @Module({
   controllers: [MenuController, ...menuController],
@@ -14,6 +16,7 @@ import { AbilityModule } from '@/ability/ability.module';
   imports: [
     TypeOrmModule.forFeature([...menuEntities], 'onlinemenu'),
     AbilityModule,
+    forwardRef(() => UsersModule),
   ],
   providers: [MenuService, ...menuSerivces],
   exports: [MenuService, ...menuSerivces],

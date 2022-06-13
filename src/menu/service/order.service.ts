@@ -4,8 +4,9 @@ import { order } from '@/menu/entity/order.entity';
 import { order_product } from '@/menu/entity/order_product.entity';
 import { order_product_adjustitem } from '@/menu/entity/order_product_adjustitem.entity';
 import { Connection, Repository } from 'typeorm';
-import { orderDTO } from '../DTO/order.DTO';
+import { orderCreateDTO, orderInfoDTO } from '../DTO/order.DTO';
 import * as moment from 'moment';
+import { user } from '@/users/user.entity';
 
 @Injectable()
 export class OrderService {
@@ -14,15 +15,11 @@ export class OrderService {
     private connection: Connection,
     @InjectRepository(order, 'onlinemenu')
     private order_Respository: Repository<order>,
+    @InjectRepository(user, 'onlinemenu')
+    private user_Respository: Repository<user>,
   ) {}
 
-  // async addToOrdersTable(datas: Array<orderDTO>) {
-  //   return Array.from(datas).forEach((data) => {
-  //     this.addToOrderTable(data);
-  //   });
-  // }
-
-  async createOrder(data: orderDTO) {
+  async createUserOrder(data: orderCreateDTO) {
     const varorder = new order();
     varorder.user_id = data.user_id;
     varorder.order_quantity = data.order_quantity;
@@ -73,7 +70,100 @@ export class OrderService {
     }
   }
 
-  async getOrder(user_id: number, order_id: number) {
+  async getUserOrder(user_id: number, order_id: number): Promise<orderInfoDTO> {
+    const user = await this.user_Respository.findOne({
+      join: {
+        alias: 'user',
+        leftJoinAndSelect: {
+          order: 'user.orders',
+          order_products: 'order.order_products',
+          product: 'order_products.product',
+        },
+      },
+      where: { user_id: user_id },
+    });
+    if (user !== undefined) {
+      const targetOrder = user.orders.find((order) => {
+        return order.order_id === Number(order_id);
+      });
+      if (targetOrder !== undefined) {
+        user.orders.map(async (order) => {
+          delete order.user_id;
+          order.order_products = await this.getUserOrderProducts(
+            user.user_id,
+            order.order_id,
+          );
+        });
+        return targetOrder;
+      } else {
+        throw new HttpException('查無此訂單', HttpStatus.NOT_FOUND);
+      }
+    }
+    throw new HttpException('查無此使用者', HttpStatus.NOT_FOUND);
+    // return user;
+  }
+
+  async getUserOrders(user_id: number): Promise<orderInfoDTO[]> {
+    const user = await this.user_Respository.findOne({
+      join: {
+        alias: 'user',
+        leftJoinAndSelect: {
+          order: 'user.orders',
+          order_products: 'order.order_products',
+          product: 'order_products.product',
+        },
+      },
+      where: { user_id: user_id },
+    });
+    if (user !== undefined) {
+      await Promise.all(
+        user.orders.map(async (order) => {
+          delete order.user_id;
+          order.order_products = await this.getUserOrderProducts(
+            user.user_id,
+            order.order_id,
+          );
+        }),
+      );
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
+      const { orders, ...rest } = user;
+
+      return orders;
+    }
+    throw new HttpException('查無此使用者', HttpStatus.NOT_FOUND);
+  }
+
+  async deleteUserOrder(user_id: number, order_id: number): Promise<void> {
+    const res = await this.order_Respository.findOne({
+      where: { user_id: user_id, order_id: order_id },
+    });
+
+    if (res !== undefined) {
+      if (moment(res.order_pickupdate) < moment()) {
+        throw new HttpException(
+          '訂單不可被刪除，因為現在時間已超過取餐時間',
+          HttpStatus.CONFLICT,
+        );
+      } else {
+        await this.order_Respository.delete({
+          user_id: user_id,
+          order_id: order_id,
+        });
+      }
+    }
+
+    // throw new NotFoundException('訂單編號：' + order_id + ' 不存在');
+    throw new HttpException(
+      '訂單編號：' + order_id + ' 不存在',
+      HttpStatus.NOT_FOUND,
+    );
+  }
+
+  // for getUserOrder and getUserOrders
+  async getUserOrderProducts(
+    user_id: number,
+    order_id: number,
+  ): Promise<order_product[]> {
     const flat = (obj, out) => {
       Object.keys(obj).forEach((key) => {
         if (typeof obj[key] === 'object') {
@@ -86,6 +176,7 @@ export class OrderService {
     };
     const order = await this.order_Respository
       .createQueryBuilder('order')
+      // .select('order')
       .leftJoinAndSelect('order.order_products', 'order_products')
       .leftJoinAndSelect('order_products.product', 'product')
       .leftJoinAndSelect(
@@ -125,34 +216,5 @@ export class OrderService {
     }
 
     return neworder;
-  }
-
-  async deleteOrder(user_id: number, order_id: number) {
-    const res = await this.order_Respository.findOne({
-      where: { user_id: user_id, order_id: order_id },
-    });
-
-    if (res !== undefined) {
-      if (moment(res.order_pickupdate) < moment()) {
-        throw new HttpException('訂單不可被刪除', HttpStatus.CONFLICT);
-      } else {
-        if (res) {
-          await this.order_Respository.delete({
-            user_id: user_id,
-            order_id: order_id,
-          });
-          return {
-            status: 200,
-            message: '訂單已成功刪除',
-          };
-        }
-      }
-    }
-
-    // throw new NotFoundException('訂單編號：' + order_id + ' 不存在');
-    throw new HttpException(
-      '訂單編號：' + order_id + ' 不存在',
-      HttpStatus.NOT_FOUND,
-    );
   }
 }

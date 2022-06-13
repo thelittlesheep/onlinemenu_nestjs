@@ -1,5 +1,33 @@
 import { ApiProperty } from '@nestjs/swagger';
 
+export interface IResponse {
+  statusCode?: number;
+  isSuccess?: boolean;
+  message?: string;
+}
+
+export interface IResponseSuccess<T> extends IResponse {
+  isSuccess: true;
+  data?: T;
+}
+
+export class ResponseSuccess implements IResponseSuccess<any> {
+  statusCode?: number;
+  isSuccess: true;
+  message?: string;
+  data?: any;
+  constructor(statusCode: number, message: string, data: any) {
+    this.statusCode = statusCode;
+    this.isSuccess = true;
+    this.message = message;
+    this.data = data;
+  }
+
+  static responseGenerator(message: string, data: any) {
+    return { message: message, responseData: data };
+  }
+}
+
 export enum errorType {
   BAD_REQUEST = '錯誤的請求',
   UNAUTHORIZED = '未經授權',
@@ -9,9 +37,8 @@ export enum errorType {
   INTERNAL_SERVER_ERROR = '伺服器錯誤',
 }
 
-export interface IResponseError {
-  statusCode?: number;
-  message?: string;
+export interface IResponseError extends IResponse {
+  isSuccess: false;
   error?: errorType;
 }
 
@@ -22,6 +49,8 @@ export class ResponseError implements IResponseError {
   message: string;
   @ApiProperty()
   error: errorType;
+  @ApiProperty()
+  isSuccess: false;
 }
 
 export function checkResponseErrorType(statusCode: number) {

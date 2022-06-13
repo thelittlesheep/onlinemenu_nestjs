@@ -11,7 +11,7 @@ class order_product_adjustitem_schema {
   @ApiProperty()
   adjusttype_id?: number;
 }
-class order_products_schema {
+export class order_products_schema {
   @ApiProperty()
   order_product_id?: number;
   @ApiProperty()
@@ -19,11 +19,10 @@ class order_products_schema {
   @ApiProperty({ type: [order_product_adjustitem_schema] })
   order_product_adjustitem?: order_product_adjustitem_schema[];
 }
-
-export class orderDTO {
+export class orderInfoDTO {
   @IsNumber()
   @ApiProperty()
-  user_id?: number;
+  order_id?: number;
   @IsNumber()
   @ApiProperty()
   order_quantity?: number;
@@ -36,4 +35,9 @@ export class orderDTO {
     type: [order_products_schema],
   })
   order_products?: order_products_schema[];
+}
+export class orderCreateDTO extends orderInfoDTO {
+  @IsNumber()
+  @ApiProperty()
+  user_id?: number;
 }

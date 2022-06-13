@@ -5,10 +5,7 @@ import {
   HttpException,
 } from '@nestjs/common';
 import { Response } from 'express';
-import {
-  checkResponseErrorType,
-  IResponseError,
-} from './responseError.interface';
+import { checkResponseErrorType, IResponseError } from './response.interface';
 
 @Catch(HttpException)
 export class HttpExceptionFilter implements ExceptionFilter<HttpException> {
@@ -21,6 +18,7 @@ export class HttpExceptionFilter implements ExceptionFilter<HttpException> {
 
     const responseObject: IResponseError = {
       statusCode: status,
+      isSuccess: false,
       message: message,
       error: checkResponseErrorType(status),
     };

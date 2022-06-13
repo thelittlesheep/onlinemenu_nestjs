@@ -9,6 +9,8 @@ import * as passport from 'passport';
 import * as connectRedis from 'connect-redis';
 import { createClient } from 'redis';
 import { HttpExceptionFilter } from '@/share/responseError.filter';
+import { TransformInterceptor } from './share/response.interceptor';
+import { AuthenticatedGuard } from './auth/authenticaed.guard';
 
 declare const module: any;
 // redis@v3
@@ -32,6 +34,7 @@ async function bootstrap() {
     // exposedHeaders: ['Set-Cookie'],
   });
   app.useGlobalPipes(new ValidationPipe());
+  app.useGlobalInterceptors(new TransformInterceptor());
   // section of session middleware
   app.use(
     session({
