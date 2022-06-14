@@ -130,8 +130,10 @@ export class UserController {
     description: '新增使用者',
   })
   async createUser(@Body() user: userDTO) {
-    await this.user_Service.createUser(user);
-    return ResponseSuccess.responseGenerator('成功新增使用者', null);
+    return ResponseSuccess.responseGenerator(
+      '成功新增使用者',
+      await this.user_Service.createUser(user),
+    );
   }
 
   @Get('/:user_id')

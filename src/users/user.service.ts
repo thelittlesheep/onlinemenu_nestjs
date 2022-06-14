@@ -13,6 +13,7 @@ import userInfoDTO from './DTO/userInfo.DTO';
 import { Store } from 'express-session';
 import { RedisClient } from 'redis';
 import { ISession } from '@/custom.interface';
+import { json } from 'stream/consumers';
 
 interface RedisCache extends Cache {
   store: RedisStore;
@@ -63,11 +64,12 @@ export class UserService {
 
     const dbuser = await this.findUserByAccount(data.user_account);
 
-    if (dbuser) {
+    if (dbuser !== undefined) {
       throw new HttpException('帳號已存在', HttpStatus.CONFLICT);
     }
-
+    // 若使用者不存在，則新增使用者，並同時取得使用者的user_id
     const user_id = (await this.user_Respository.save(varuser)).user_id;
+    // 如果新增之使用者沒有提供user_name，則在新增使用者後，更新其user_name為 "User{user_id}"
     if (data.user_name === undefined) {
       await this.user_Respository.update(
         { user_id: user_id }, // where condition
@@ -75,7 +77,7 @@ export class UserService {
       );
     }
 
-    return { statusCode: 201, message: '成功建立帳號' };
+    return { user_id: user_id };
   }
 
   async updateUser(
@@ -112,10 +114,7 @@ export class UserService {
         session.passport.user = rest;
       }
 
-      return {
-        statusCode: 200,
-        message: `成功更新使用者資訊`,
-      };
+      return updateItems;
     } else {
       throw new HttpException('資料未變動', HttpStatus.OK);
     }
