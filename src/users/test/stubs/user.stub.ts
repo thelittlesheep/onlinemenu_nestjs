@@ -5,6 +5,8 @@ import { user } from '@/users/user.entity';
 export const userStub = (): user => {
   return {
     user_id: 1,
+    user_account: 'xiaoyang',
+    user_password: 'X123456789',
     user_name: 'HankHuang',
     user_email: 'hank@gmail.com',
     user_phone: '0923313333',
@@ -28,6 +30,8 @@ export const userListStub = (): user[] => {
   return [
     {
       user_id: 1,
+      user_account: 'xiaoyang',
+      user_password: 'X123456789',
       user_name: 'HankHuang',
       user_email: 'hank@gmail.com',
       user_phone: '0923313333',

@@ -13,7 +13,6 @@ import userInfoDTO from './DTO/userInfo.DTO';
 import { Store } from 'express-session';
 import { RedisClient } from 'redis';
 import { ISession } from '@/custom.interface';
-import { json } from 'stream/consumers';
 
 interface RedisCache extends Cache {
   store: RedisStore;
@@ -26,17 +25,16 @@ interface RedisStore extends Store {
 
 @Injectable()
 export class UserService {
-  private redisClient: RedisClient;
+  // private redisClient: RedisClient;
   constructor(
     @InjectRepository(user, 'onlinemenu')
-    private user_Respository: Repository<user>,
-    @Inject(CACHE_MANAGER)
-    private cacheManager: RedisCache,
+    private user_Respository: Repository<user>, // @Inject(CACHE_MANAGER) // private cacheManager: RedisCache,
   ) {
-    this.redisClient = this.cacheManager.store.getClient();
+    // this.redisClient = this.cacheManager.store.getClient();
   }
 
   async findUserByAccount(user_account: string) {
+    // return user_account;
     return this.user_Respository.findOne({
       where: { user_account: user_account },
     });

@@ -99,7 +99,7 @@ describe('UserController', () => {
         expect(userService.getAllUser).toHaveBeenCalledWith();
       });
 
-      it('should return All users in database', () => {
+      it('it should return All users in database', () => {
         expect(userList).toEqual(userListStub());
       });
 
