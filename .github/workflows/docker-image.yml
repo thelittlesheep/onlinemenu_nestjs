@@ -8,6 +8,8 @@ jobs:
 
   test:
 
+    name: Jest test
+
     runs-on: ubuntu-latest
 
     steps:
@@ -17,7 +19,11 @@ jobs:
     - name: Run tests
       run: yarn test
 
-  build:
+  build docker image:
+
+    name: build docker image and push to Docker Hub
+
+    needs: test
 
     runs-on: ubuntu-latest
 
