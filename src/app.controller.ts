@@ -1,12 +1,16 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import { Controller, Get, Post, UseGuards, Request, Res } from '@nestjs/common';
-import { LocalAuthGuard } from 'auth/local-auth.guard';
+import { LocalAuthGuard } from '@/auth/local-auth.guard';
 import { AuthService } from './auth/auth.service';
-import { AllowAny } from 'auth/authenticaed.decorator';
+import { AllowAny } from '@/auth/authenticaed.decorator';
 
 @Controller()
 export class AppController {
   constructor(private readonly authService: AuthService) {}
+  // @Get()
+  // getHello() {
+  //   return 'Hello World!';
+  // }
   // @UseGuards(LocalAuthGuard)
   // @Post('login')
   // @AllowAny()

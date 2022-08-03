@@ -9,15 +9,11 @@ import { MenuModule } from './menu/menu.module';
 import { UsersModule } from './users/users.module';
 import { AuthModule } from './auth/auth.module';
 import { APP_GUARD, Reflector } from '@nestjs/core';
-import { AuthenticatedGuard } from 'auth/authenticaed.guard';
+import { AuthenticatedGuard } from '@/auth/authenticaed.guard';
 import { ConfigModule } from '@nestjs/config';
-import configuration from 'configuration';
+import configuration from './configuration';
 
 const routes: Routes = [
-  // {
-  //   path: 'rpi_temp',
-  //   module: RpiTempModule,
-  // },
   {
     path: 'menu',
     module: MenuModule,
@@ -30,11 +26,9 @@ const routes: Routes = [
 @Module({
   imports: [
     RouterModule.forRoutes(routes),
-    // TypeOrmModule.forRoot(RPI_LOGConfig),
     TypeOrmModule.forRoot(onlinemenuConfig),
-    // RpiTempModule,
-    MenuModule,
     UsersModule,
+    MenuModule,
     AuthModule,
     ConfigModule.forRoot({
       envFilePath: '.env',
@@ -46,6 +40,7 @@ const routes: Routes = [
   providers: [
     AppService,
     AppGateway,
+    // 提供全域的AuthenticatedGuard驗證
     {
       provide: APP_GUARD,
       useFactory: (ref) => new AuthenticatedGuard(ref),

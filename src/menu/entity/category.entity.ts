@@ -1,13 +1,5 @@
-import {
-  Column,
-  Entity,
-  OneToMany,
-  PrimaryGeneratedColumn,
-  ManyToMany,
-  JoinTable,
-} from 'typeorm';
+import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
 import { product } from './product.entity';
-import { adjustitem } from './adjustitem.entity';
 import { adjusttype } from './adjusttype.entity';
 
 @Entity({ name: 'Category' })
