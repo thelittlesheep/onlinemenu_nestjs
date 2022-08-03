@@ -19,7 +19,7 @@ jobs:
     - name: Run tests
       run: yarn test
 
-  build docker image:
+  build_docker_image:
 
     name: build docker image and push to Docker Hub
 
