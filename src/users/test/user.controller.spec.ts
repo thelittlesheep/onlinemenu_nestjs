@@ -82,7 +82,7 @@ describe('UserController', () => {
 
       it('should return "成功登出"', () => {
         expect(userController.logout(requestStub())).toEqual(
-          ResponseSuccess.responseGenerator(null, null),
+          ResponseSuccess.responseGenerator('成功登出', null),
         );
       });
     });
