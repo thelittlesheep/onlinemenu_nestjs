@@ -20,8 +20,8 @@ import { MenuModule } from '@/menu/menu.module';
     forwardRef(() => MenuModule),
     CacheModule.register<ClientOpts>({
       store: redisStore,
-      host: 'onlinemenu_redis',
-      port: 6379,
+      host: process.env.redis_host,
+      port: Number(process.env.redis_port),
       max: 50,
     }),
   ],
